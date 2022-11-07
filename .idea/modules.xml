@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/.idea/kochat-test.iml" filepath="$PROJECT_DIR$/.idea/kochat-test.iml" />
+      <module fileurl="file://$USER_HOME$/anaconda3/envs/kochat-test/Lib/site-packages/kocrawl/.idea/kocrawl.iml" filepath="$USER_HOME$/anaconda3/envs/kochat-test/Lib/site-packages/kocrawl/.idea/kocrawl.iml" />
+    </modules>
+  </component>
+</project>
