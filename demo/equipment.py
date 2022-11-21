@@ -30,8 +30,10 @@ class EquipmentSearcher:
     def _make_query(self, category: str, brand: str) -> str:
 
 
-        #query = ' '.join([category, brand])
-        query = category
+        query = ' '.join([category, brand])
+        #query = category
+
+        print(query)
         return query
 
     def search_naver_shopping(self, location: str, travel: str):
@@ -58,7 +60,14 @@ class EquipmentSearcher:
                 temp_dict = {"title": json_data["items"][i]["title"],
                              "link": json_data["items"][i]["link"],
                              "image": json_data["items"][i]["image"],
-                             "lprice": json_data["items"][i]["lprice"]}
+                             "lprice": json_data["items"][i]["lprice"],
+                             "category1": json_data["items"][i]["category1"],
+                             "category2": json_data["items"][i]["category2"],
+                             "category3": json_data["items"][i]["category3"],
+                             "brand": json_data["items"][i]["brand"]
+
+
+                             }
                 data_dict.append(temp_dict)
 
             #print(data_dict[1].values())
@@ -113,9 +122,11 @@ class EquipmentAnswerer():
             result[i+1]['title'] = re.sub("<b>", "", result[i+1]['title'])
             result[i + 1]['title'] = re.sub("</b>", "", result[i + 1]['title'])
 
-            msg = f"\'{category}\' 移댄뀒怨좊━??{i+1}踰덉㎏ 寃?됯껐怨쇱엯?덈떎.\n"
-            msg += f"{result[i+1]['title']} \n"
-            msg += f"{result[i+1]['lprice']}??\n"
+            msg = f"{result[i + 1]['category1']} - {result[i + 1]['category2']} - {result[i + 1]['category3']} \n"
+            msg += f"\'{category}\' 移댄뀒怨좊━??{i + 1}踰덉㎏ 寃?됯껐怨쇱엯?덈떎.\n"
+            msg += f"\'{result[i + 1]['brand']}\' 釉뚮옖?쒖쓽 \n"
+            msg += f"\'{result[i+1]['title']}\' \n"
+            msg += f"理쒖?媛 : {result[i+1]['lprice']}??\n"
             msg += f"諛붾줈媛湲?: {result[i+1]['link']}\n"
             msg += f"?ъ쭊蹂닿린 :{result[i+1]['image']}\n\n"
             msg5 += msg
@@ -150,6 +161,3 @@ class EquipmentCrawler:
         result = EquipmentAnswerer().map_form(category, brand, result_dict)
         #return result, result_dict
         return result
-
-E = EquipmentCrawler()
-print(E.request_debug("?붾줈","1"))
