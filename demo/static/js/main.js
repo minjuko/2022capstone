@@ -125,6 +125,11 @@ function onSendButtonClicked() {
             setTimeout(function () {
                 return sendMessage("그렇군요. 알겠습니다!", 'left');
             }, 1000);
+        } else if (messageText.includes('화로검색')) {
+            setTimeout(function () {
+                return requestChat(messageText, 'fire');
+            }, 1000);
+
 
 
         } else if (state.includes('REQUIRE')) {

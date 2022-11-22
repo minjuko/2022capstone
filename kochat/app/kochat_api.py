@@ -21,7 +21,9 @@ from kochat.app.scenario import Scenario
 from kochat.app.scenario_manager import ScenarioManager
 from kochat.data.dataset import Dataset
 from kochat.decorators import api
+from equipment import EquipmentCrawler
 
+E = EquipmentCrawler()
 
 @api
 class KochatApi:
@@ -83,6 +85,37 @@ class KochatApi:
         """
         flask 함수들을 build합니다.
         """
+#######################################################################
+
+        @self.app.route('/{}/<uid>/<text>'.format(self.fire_pattern), methods=['GET'])
+        def select_scenario(uid: str, text: str) -> dict:
+            """
+            시나리오를 선택합니다.
+
+            :param uid: 유저 아이디 (고유값)
+            :param text: 유저 입력 문자열
+            :return: json 딕셔너리
+            """
+
+            #prep = self.dataset.load_predict(text, self.embed_processor)
+            #entity = self.entity_recognizer.predict(prep)
+            #text = self.dataset.prep.tokenize(text, train=False)
+            #intent = self.dialogue_cache[uid]['intent']
+
+            #text = text + self.dialogue_cache[uid]['input']  # 이전에 저장된 dict 앞에 추가
+
+
+            #entity = entity + self.dialogue_cache[uid]['entity']  # 이전에 저장된 dict 앞에 추가
+            dict1 = E.request_debug("화로","헬리녹스")
+
+            #json_object = json.dumps(dict1, indent=4, ensure_ascii=False)
+            #print(type(json_object))
+            #print(json_object)
+
+
+            return dict1
+
+        ###################################################################
 
         @self.app.route('/{}/<uid>/<text>'.format(self.request_chat_url_pattern), methods=['GET'])
         def request_chat(uid: str, text: str) -> dict:
@@ -101,6 +134,8 @@ class KochatApi:
             text = self.dataset.prep.tokenize(text, train=False)
             self.dialogue_cache[uid] = self.scenario_manager.apply_scenario(intent, entity, text)
             return self.dialogue_cache[uid]
+
+
 
         @self.app.route('/{}/<uid>/<text>'.format(self.fill_slot_url_pattern), methods=['GET'])
         def fill_slot(uid: str, text: str) -> dict:

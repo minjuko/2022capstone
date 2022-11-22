@@ -107,7 +107,7 @@ class EquipmentEditor(BaseEditor):
 
 class EquipmentAnswerer():
 
-    def map_form(self, category: str, brand: str, result: list) -> str:
+    def map_form(self, category: str, brand: str, result: list) -> tuple:
         """
         ?ы뻾吏 異쒕젰 ?щ㎎
 
@@ -116,8 +116,8 @@ class EquipmentAnswerer():
         :param result: ?곗씠???뺤뀛?덈━
         :return: 異쒕젰 硫붿떆吏
         """
-        msg5 = ""
-        for i in range(5):
+        msg_tuple = ["", "",""]
+        for i in range(3):
 
             result[i+1]['title'] = re.sub("<b>", "", result[i+1]['title'])
             result[i + 1]['title'] = re.sub("</b>", "", result[i + 1]['title'])
@@ -128,10 +128,12 @@ class EquipmentAnswerer():
             msg += f"\'{result[i+1]['title']}\' \n"
             msg += f"理쒖?媛 : {result[i+1]['lprice']}??\n"
             msg += f"諛붾줈媛湲?: {result[i+1]['link']}\n"
-            msg += f"?ъ쭊蹂닿린 :{result[i+1]['image']}\n\n"
-            msg5 += msg
+            msg += "{{"
+            msg += result[i+1]['image']
+            msg += "}} \n\n"
+            msg_tuple[i] += msg
 
-        return msg5
+        return msg_tuple
 
 
 class EquipmentCrawler:
@@ -160,4 +162,14 @@ class EquipmentCrawler:
 
         result = EquipmentAnswerer().map_form(category, brand, result_dict)
         #return result, result_dict
-        return result
+        temp_result = {
+            'input': [],
+            'intent': 'equipment',
+            'entity': [],
+            'state': 'SUCCESS',
+            'answer': result
+        }
+
+        print(temp_result)
+
+        return temp_result
