@@ -65,8 +65,8 @@ function seperateURL(textUrlMsg) {  // 서버에서 문자열 받아서 채팅�
     let textMsg = leftMsg.concat(rightMsg);
     let urlMsg = fromServerMsg.substring(leftIndex+2,rightIndex-2);
     
-    sendMessage("서버에서 온 메세지가 '텍스트{{1234}}텍스트'일 때 url 분리하기", 'left');
-    sendMessage("Text:" + textMsg + "<br> url:" + urlMsg, 'left');
+    sendMessage("서버에서 온 메세지에서 url 분리하기", 'left');
+    sendMessage("<img width=80% height=80% src='"+urlMsg+"'> <br>" + textMsg  , 'left');
 }
 
 function FinSelectTheme(){
@@ -125,6 +125,135 @@ function FinSelectTheme(){
     
 }
 
+function 장비선택(){
+    return sendMessage("<button class='selectequipment' onclick='텐트();' >텐트</button>" +
+                        "<button class='selectequipment' onclick='침낭ㆍ매트();'>침낭ㆍ매트</button>" +
+                        "<button class='selectequipment' onclick='퍼니처();'>퍼니처</button>" +
+                    "<button class='selectequipment' onclick='라이팅();'>라이팅</button>" +
+                    "<button class='selectequipment' onclick='화로ㆍBBQ();' >화로 ㆍ BBQ</button>" +
+                    "<button class='selectequipment' onclick='키친();' >키친</button>" +
+                    "<button class='selectequipment' onclick='계절용품();' >계절용품</button>" +
+                    "<button class='selectequipment' onclick='스토리지();' >스토리지</button>" +
+                    "<button class='selectequipment' onclick='RV용품();'>RV용품</button>" +
+                    "<button class='selectequipment' onclick='악세서리();'>악세서리</button>" +
+                    "<button class='selectequipment' onclick='등산용품();'>등산용품</button>" , 'left');
+}
+function 텐트(){
+    return sendMessage("<button class='selectequipment' onclick=FinEq('거실형텐트'); >거실형텐트</button>" +
+    "<button class='selectequipment' onclick=FinEq('돔형텐트') >돔형텐트</button>" +
+    "<button class='selectequipment' onclick=FinEq('티피/루프탑텐트'); >티피/루프탑텐트</button>" +
+    "<button class='selectequipment' onclick=FinEq('백패킹텐트'); >백패킹텐트</button>" +
+    "<button class='selectequipment' onclick=FinEq('면텐트'); >면텐트</button>" +
+    "<button class='selectequipment' onclick=FinEq('타프텐트/타프옵션'); >타프텐트/타프옵션</button>" +
+    "<button class='selectequipment' onclick=FinEq('팝업/그늘막/스크린'); >팝업/그늘막/스크린</button>" +
+    "<button class='selectequipment' onclick=FinEq('폴대/펙/스트링/스토퍼'); >폴대/펙/스트링/스토퍼</button>" ,'left'); 
+}
+
+function 침낭ㆍ매트(){
+    return sendMessage("<button class='selectequipment' onclick=FinEq('침낭'); >침낭</button>" +
+    "<button class='selectequipment' onclick=FinEq('자충/에어매트') >자충/에어매트</button>" +
+    "<button class='selectequipment' onclick=FinEq('카페트/블랑켓/러그'); >카페트/블랑켓/러그</button>" +
+    "<button class='selectequipment' onclick=FinEq('발포매트/폼매트/레저시트'); >발포매트/폼매트/레저시트</button>" +
+    "<button class='selectequipment' onclick=FinEq('전기매트'); >전기매트</button>" +
+    "<button class='selectequipment' onclick=FinEq('베개/방석/쿠션'); >베개/방석/쿠션</button>" ,'left'); 
+}
+
+function 퍼니처(){
+    return sendMessage("<button class='selectequipment' onclick=FinEq('테이블'); >테이블</button>" +
+    "<button class='selectequipment' onclick=FinEq('릴렉스체어') >릴렉스체어</button>" +
+    "<button class='selectequipment' onclick=FinEq('미니/경량체어'); >미니/경량체어</button>" +
+    "<button class='selectequipment' onclick=FinEq('야전침대'); >야전침대</button>" +
+    "<button class='selectequipment' onclick=FinEq('해먹/스탠드'); >해먹/스탠드</button>",'left'); 
+}
+
+function 라이팅(){
+    return sendMessage("<button class='selectequipment' onclick=FinEq('스토브'); >스토브</button>" +
+    "<button class='selectequipment' onclick=FinEq('가스/오일랜턴') >가스/오일랜턴</button>" +
+    "<button class='selectequipment' onclick=FinEq('LED랜턴/충전식랜턴'); >LED랜턴/충전식랜턴</button>" +
+    "<button class='selectequipment' onclick=FinEq('헤드랜턴/후레쉬'); >헤드랜턴/후레쉬</button>" +
+    "<button class='selectequipment' onclick=FinEq('릴선/연장선'); >릴선/연장선</button>" ,'left'); 
+}
+
+function 화로() {
+    return sendMessage("<button class='selectequipment' onclick=FinEq('화로대');>화로대</button>" +
+                        "<button class='selectequipment' onclick=FinEq('그릴/플레이트');>그릴/플레이트</button>" +
+                        "<button class='selectequipment' onclick=FinEq('가스/연료/착화제');>가스/연료/착화제</button>" +
+                        "<button class='selectequipment' onclick=FinEq('BBQ용품');>BBQ 용품</button>" +
+                        "<button class='selectequipment' onclick=FinEq('토치/연료통');>토치/연료통</button>" +
+                        "<button class='selectequipment' onclick=FinEq('기타용품');>기타용품</button>", 'left');
+}
+
+function 키친() {
+    return sendMessage("<button class='selectequipment'onclick=FinEq('코펠/쿠커'); >코펠/쿠커</button>" +
+                        "<button class='selectequipment' onclick=FinEq('냄비/팬/솥/더치오븐');>냄비/팬/솥/더치오븐</button>" +
+                        "<button class='selectequipment' onclick=FinEq('식기/주전자');>식기/주전자</button>" +
+                        "<button class='selectequipment' onclick=FinEq('수저/칼/도마/조리도구');>수저/칼/도마/조리도구</button>" +
+                        "<button class='selectequipment' onclick=FinEq('컵/잔/시에라');>컵/잔/시에라</button>" +
+                        "<button class='selectequipment' onclick=FinEq('양념통/수납통');>양념통/수납통</button>" +
+                        "<button class='selectequipment' onclick=FinEq('식기건조/설거지용품/선반');>식기건조/설거지용품/선반</button>" +
+                        "<button class='selectequipment' onclick=FinEq('쿨러/아이스박스/스탠드');>쿨러/아이스박스/스탠드</button>" +
+                        "<button class='selectequipment' onclick=FinEq('보온보냉병/물통/워터저그');>보온보냉병/물통/워터저그</button>" +
+                        "<button class='selectequipment' onclick=FinEq('키친소품');>키친소품</button>", 'left');
+}
+
+function 계절용품() {
+    return sendMessage("<button class='selectequipment' onclick=FinEq('쿨러');>쿨러</button>" +
+                        "<button class='selectequipment' onclick=FinEq('선풍기/서큘레이터');>선풍기/서큘레이터</button>" +
+                        "<button class='selectequipment' onclick=FinEq('화목난로');>화목난로</button>" +
+                        "<button class='selectequipment' onclick=FinEq('등유/가스난로');>등유/가스난로</button>" +
+                        "<button class='selectequipment' onclick=FinEq('팬히터');>팬히터</button>" +
+                        "<button class='selectequipment' onclick=FinEq('전기요/핫팩');>전기요/핫팩</button>"+
+                        "<button class='selectequipment' onclick=FinEq('기타용품');>기타용품</button>", 'left');
+}
+
+function 스토리지() {
+    return sendMessage("<button class='selectequipment' onclick=FinEq('수납박스/웨건');>수납박스/웨건</button>" +
+                        "<button class='selectequipment' onclick=FinEq('대형수납케이스');>대형수납케이스</button>" +
+                        "<button class='selectequipment' onclick=FinEq('소형수납케이스');>소형수납케이스</button>" +
+                        "<button class='selectequipment' onclick=FinEq('대형가방(20L이상)');>대형가방(20L이상)</button>" +
+                        "<button class='selectequipment' onclick=FinEq('소형가방(20L미만)');>소형가방(20L미만)</button>" +
+                        "<button class='selectequipment' onclick=FinEq('기타용품');>기타용품</button>", 'left');
+}
+
+function RV용품(){
+    return sendMessage("<button class='selectequipment' onclick=FinEq('트레일러'); >트레일러</button>" +
+    "<button class='selectequipment' onclick=FinEq('루프탑텐트') >루프탑텐트</button>" +
+    "<button class='selectequipment' onclick=FinEq('루프백/루프박스'); >루프백/루프박스</button>" +
+    "<button class='selectequipment' onclick=FinEq('차량용에어매트'); >차량용에어매트</button>" ,'left'); 
+}
+
+function 악세서리(){
+    return sendMessage("<button class='selectequipment' onclick=FinEq('해머/톱/삽/도끼'); >해머/톱/삽/도끼</button>" +
+    "<button class='selectequipment' onclick=FinEq('나이프/TOOL') >나이프/TOOL</button>" +
+    "<button class='selectequipment' onclick=FinEq('비너/열쇠고리'); >비너/열쇠고리</button>" +
+    "<button class='selectequipment' onclick=FinEq('데코/장식용품'); >데코/장식용품</button>",'left'); 
+}
+
+function 등산용품(){
+    return sendMessage("<button class='selectequipment' onclick=FinEq('샤워/청소/세탁용품'); >샤워/청소/세탁용품</button>" +
+    "<button class='selectequipment' onclick=FinEq('영상/음향/캠핑도서') >영상/음향/캠핑도서</button>" ,'left'); 
+}
+
+function FinEq(obj){
+    sendMessage("장비선택완료:" + obj, 'left');
+}
+
+let NUM=0;
+function CheckNum(e){
+    if(e.target.checked){
+        if(NUM>=3){
+            e.target.checked = false;
+            return alert("3개만 선택해 주세요");
+        }
+        NUM++;
+        sendMessage("현재 클릭된 버튼 수(+) : " + NUM,'left');
+    }else if(!e.target.checked) {
+        NUM--;
+        sendMessage("현재 클릭된 버튼 수(-) : " + NUM,'left');
+    }
+
+}
+
 function onClickAsEnter(e) {
     if (e.keyCode === 13) {
         onSendButtonClicked()
@@ -141,18 +270,19 @@ function selectNUM2() {
 
     selectedBUTTON = 2;
     sendMessage("<div class= 'boxes'>" + 
-                "<input type=checkbox name='chk' value='노을' id='노을' > <label for='노을'>#노을 뷰가 있는</label><br>" +
-                "<input type=checkbox name='chk' id='바다' > <label for='바다'>#바다가 보이는</label><br>"+
-                "<input type=checkbox name='chk' id='반려동물' > <label for='반려동물'>#반려동물과 함께하는</label><br>"+
-                "<input type=checkbox name='chk' id='별' > <label for='별'>#별이 잘 보이는</label><br>"+
-                "<input type=checkbox name='chk' id='아이' > <label for='아이'>#아이들 놀기 좋은</label><br>"+
-                "<input type=checkbox name='chk' id='물놀이' > <label for='물놀이'>#물놀이 하기 좋은</label><br>"+
-                "<input type=checkbox name='chk' id='한적한' > <label for='한적한'>#조용하고 한적한</label><br>"+
-                "<input type=checkbox name='chk' id='단풍'> <label for='단풍'>#단풍 보기 좋은</label><br>"+
-                "<input type=checkbox name='chk' id='바베큐' > <label for='바베큐'>#바베큐하기 좋은</label><br>"+
-                "<input type=checkbox name='chk' id='구경'> <label for='구경'>#구경거리가 있는</label><br>"+
+                "<input type=checkbox name='chk' onchange='CheckNum(event);' id='노을' > <label for='노을'>#노을 뷰가 있는</label><br>" +
+                "<input type=checkbox name='chk' onchange='CheckNum(event);' id='바다' > <label for='바다'>#바다가 보이는</label><br>"+
+                "<input type=checkbox name='chk' onchange='CheckNum(event);' id='반려동물' > <label for='반려동물'>#반려동물과 함께하는</label><br>"+
+                "<input type=checkbox name='chk' onchange='CheckNum(event);' id='별' > <label for='별'>#별이 잘 보이는</label><br>"+
+                "<input type=checkbox name='chk' onchange='CheckNum(event);' id='아이' > <label for='아이'>#아이들 놀기 좋은</label><br>"+
+                "<input type=checkbox name='chk' onchange='CheckNum(event);' id='물놀이' > <label for='물놀이'>#물놀이 하기 좋은</label><br>"+
+                "<input type=checkbox name='chk' onchange='CheckNum(event);' id='한적한' > <label for='한적한'>#조용하고 한적한</label><br>"+
+                "<input type=checkbox name='chk' onchange='CheckNum(event);' id='단풍'> <label for='단풍'>#단풍 보기 좋은</label><br>"+
+                "<input type=checkbox name='chk' onchange='CheckNum(event);' id='바베큐' > <label for='바베큐'>#바베큐하기 좋은</label><br>"+
+                "<input type=checkbox name='chk' onchange='CheckNum(event);' id='구경'> <label for='구경'>#구경거리가 있는</label><br>"+
 
                 "<button class='check' onclick='FinSelectTheme();'>선택완료</button>", 'left');
+                
    
 
 
@@ -184,6 +314,7 @@ function selectNUM2() {
 function selectNUM3() {
     selectedBUTTON = 3;
     sendMessage("텐트, 침낭 등 원하는 캠핑 용품을 입력해주세요",'left');
+    장비선택();
     /* 원하는 장비 단어 입력 요청하기 -> 텍스트는 아래에서 처리*/
 }
 
