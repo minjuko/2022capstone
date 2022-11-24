@@ -120,7 +120,8 @@ function FinSelectTheme(){
         alert("3개까지 선택 가능");
     }
     else{
-        sendMessage("[테마기반 서버에 보낼 메세지:" + themeArray + "]", 'left');
+        requestChat(themeArray,'selection2');
+        // sendMessage("[테마기반 서버에 보낼 메세지:" + themeArray + "]", 'left');
     }
     
 }
@@ -234,16 +235,17 @@ function 등산용품(){
     "<button class='selectequipment' onclick=FinEq('영상/음향/캠핑도서') >영상/음향/캠핑도서</button>" ,'left'); 
 }
 
-function FinEq(obj){
-    sendMessage("장비선택완료:" + obj, 'left'); 
+// 장비 서버에게 요청
+function FinEq(obj){    // obj 문자열로 바꾸고
     $.ajax({
-        url: "http://103.218.159.163.8080/" + url_pattern + '/' + userName + '/' + messageText,
+        url: "http://127.0.0.1.8080/selection1/"+ userName + '/' + obj,   
         type: "GET",
         dataType: "json",
         success: function (data) {
             state = data['state'];
 
             if (state === 'SUCCESS') {
+                // 장비 답변 받기
                 return sendMessage(data['answer'], 'left');
             } else {
                 return sendMessage('죄송합니다. 무슨말인지 잘 모르겠어요.', 'left');
@@ -252,7 +254,6 @@ function FinEq(obj){
 
         error: function (request, status, error) {
             console.log(error);
-
             return sendMessage('죄송합니다. 서버 연결에 실패했습니다.', 'left');
         }
     });
@@ -300,32 +301,7 @@ function selectNUM2() {
                 "<input type=checkbox name='chk' onchange='CheckNum(event);' id='구경'> <label for='구경'>#구경거리가 있는</label><br>"+
 
                 "<button class='check' onclick='FinSelectTheme();'>선택완료</button>", 'left');
-                
-   
-
-
-    /* 테마(10개) 제시 후 뭘 선택했는지 저장하거나 서버에 보내기 
-    더 입력 안받고 테마로 처리할거면 아래 else if(selectedBUTTON == 2) 없애도 됨*/
-    // 사용자한테 텍스트 입력 안받고 테마 버튼 선택 후 바로 서버에 보내기
-    $.ajax({
-        url: "http://103.218.159.163.8080/" + url_pattern + '/' + userName + '/' + messageText,
-        type: "GET",
-        dataType: "json",
-        success: function (data) {
-            state = data['state'];
-
-            if (state === 'SUCCESS') {
-                return sendMessage(data['answer'], 'left');
-            } else {
-                return sendMessage('죄송합니다. 무슨말인지 잘 모르겠어요.', 'left');
-            }
-        },
-
-        error: function (request, status, error) {
-            console.log(error);
-            return sendMessage('죄송합니다. 서버 연결에 실패했습니다.', 'left');
-        }
-    });
+            
 }
 
 function selectNUM3() {
@@ -366,7 +342,8 @@ function requestChat(messageText, url_pattern) {
         success: function (data) {
             state = data['state'];
             if (state === 'SUCCESS') {
-                return sendMessage(data['answer'], 'left');
+                sendAnswer(data['answer'],'left');
+                // return sendMessage(data['answer'], 'left');
             } else if (state === 'REQUIRE_LOCATION') {
                 return sendMessage('어느 지역을 알려드릴까요?', 'left');
             } else {
@@ -559,31 +536,8 @@ function onSendButtonClicked() {    // 전송 버튼을 누르면
             }, 1000);
 
 
-        } else if(selectedBUTTON == 1){
-            sendMessage("지역기반 선택된 후 채팅(자연어 처리 필요) : " + messageText, 'left');
-        } else if(selectedBUTTON == 3){
-            sendMessage("[캠핑장비 서버에 보낼 메세지: " + messageText + "]", 'left');
-            // url_pattern 정해서 서버에 메세지 보내기
-            $.ajax({
-                url: "http://103.218.159.163.8080/" + url_pattern + '/' + userName + '/' + messageText,
-                type: "GET",
-                dataType: "json",
-                success: function (data) {
-                    state = data['state'];
-        
-                    if (state === 'SUCCESS') {
-                        return sendMessage(data['answer'], 'left');
-                    } else {
-                        return sendMessage('죄송합니다. 무슨말인지 잘 모르겠어요.', 'left');
-                    }
-                },
-        
-                error: function (request, status, error) {
-                    console.log(error);
-                    return sendMessage('죄송합니다. 서버 연결에 실패했습니다.', 'left');
-                }
-            });
-        }
+        } 
+        // 아래는 지역기반(자연어처리)
         else if (state.includes('REQUIRE')) {
             return requestChat(messageText, 'fill_slot');
         } else {
