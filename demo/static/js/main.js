@@ -235,7 +235,27 @@ function 등산용품(){
 }
 
 function FinEq(obj){
-    sendMessage("장비선택완료:" + obj, 'left');
+    sendMessage("장비선택완료:" + obj, 'left'); 
+    $.ajax({
+        url: "http://103.218.159.163.8080/" + url_pattern + '/' + userName + '/' + messageText,
+        type: "GET",
+        dataType: "json",
+        success: function (data) {
+            state = data['state'];
+
+            if (state === 'SUCCESS') {
+                return sendMessage(data['answer'], 'left');
+            } else {
+                return sendMessage('죄송합니다. 무슨말인지 잘 모르겠어요.', 'left');
+            }
+        },
+
+        error: function (request, status, error) {
+            console.log(error);
+
+            return sendMessage('죄송합니다. 서버 연결에 실패했습니다.', 'left');
+        }
+    });
 }
 
 let NUM=0;
@@ -243,13 +263,11 @@ function CheckNum(e){
     if(e.target.checked){
         if(NUM>=3){
             e.target.checked = false;
-            return alert("3개만 선택해 주세요");
+            return alert("원활한 검색결과를 찾기 위해, 테마는 3개까지 선택할 수 있습니다.");
         }
         NUM++;
-        sendMessage("현재 클릭된 버튼 수(+) : " + NUM,'left');
     }else if(!e.target.checked) {
         NUM--;
-        sendMessage("현재 클릭된 버튼 수(-) : " + NUM,'left');
     }
 
 }
@@ -289,7 +307,6 @@ function selectNUM2() {
     /* 테마(10개) 제시 후 뭘 선택했는지 저장하거나 서버에 보내기 
     더 입력 안받고 테마로 처리할거면 아래 else if(selectedBUTTON == 2) 없애도 됨*/
     // 사용자한테 텍스트 입력 안받고 테마 버튼 선택 후 바로 서버에 보내기
-    // url_pattern 정해서 서버에 메세지 보내기
     $.ajax({
         url: "http://103.218.159.163.8080/" + url_pattern + '/' + userName + '/' + messageText,
         type: "GET",
@@ -343,12 +360,11 @@ function setUserName(username) {
 
 function requestChat(messageText, url_pattern) {
     $.ajax({
-        url: "http://103.218.159.163.8080/" + url_pattern + '/' + userName + '/' + messageText,
+        url: "http://127.0.0.1.8080/" + url_pattern + '/' + userName + '/' + messageText,
         type: "GET",
         dataType: "json",
         success: function (data) {
             state = data['state'];
-
             if (state === 'SUCCESS') {
                 return sendMessage(data['answer'], 'left');
             } else if (state === 'REQUIRE_LOCATION') {
@@ -364,6 +380,161 @@ function requestChat(messageText, url_pattern) {
             return sendMessage('죄송합니다. 서버 연결에 실패했습니다.', 'left');
         }
     });
+}
+
+function sendAnswer(jsonArray, message_side) {
+    // jsonArray에는 3가지의 캠핑장 정보를 담고 있음.
+    let $messages, message;
+    $('.message_input').val('');
+    $messages = $('.messages');
+		// 기본 정보 답변 메시지 호출
+    message = new sendResultMessage({
+        text: jsonArray[0], // 3가지 캠핑장중 제일 첫번째 캠핑장 정보만 넘김
+        message_side: message_side
+    });
+    message.draw();
+    $messages.animate({scrollTop: $messages.prop('scrollHeight')}, 300);
+}
+
+function sendResultMessage(arg) {
+
+    // arg.text = {"facltNm":... , "lineIntro":... , ... }
+    data = arg.text;
+    let imgUrl = data.firstImageUrl;
+    let facltNm = data.facltNm;
+    // make div.answer
+    let answer_div = document.createElement('div');
+    answer_div.classList.add('answer');
+    // make title
+    let p_name = document.createElement('p');
+    p_name.innerHTML = facltNm;
+    // make image 150*150
+    let img =  document.createElement('img');
+    img.src = imgUrl;
+    img.width = 150;
+    img.height = 150;
+    // make button 
+    let btn = document.createElement('input');
+    btn.type = 'button';
+    btn.value = '상세보기';
+    btn.style.marginTop = '10px';
+    // add eventListener  , 상세정보 메시지 출력 함수(sendSpecificAnswer) callback
+    btn.addEventListener('click' , () =>  {
+        console.log('btn clicked');
+        sendSpecificAnswer(data, arg.message_side);
+    })
+    answer_div.append(p_name);
+    answer_div.append(img);
+    answer_div.append(btn);
+    
+
+    this.message_side = arg.message_side;
+
+    // 메시지 출력 멤버 함수 정의
+    this.draw = function (_this) {
+        return function () {
+            let messages =document.querySelector('.messages');
+            // get message_template .message
+            let message_template = document.querySelector('.message_template > .message');
+            // copy .message
+            let  message = message_template.cloneNode(true);
+            // addClassName 
+            message.classList.add(_this.message_side);
+            // get div class='text_wrapper'
+            let text_wrapper = message.querySelector('.text_wrapper');
+            // get div class ='text'
+            let text = text_wrapper.querySelector('.text');
+            text.style.textAlign = 'center';
+            text.append(answer_div);
+            
+            messages.appendChild(message);
+            return setTimeout(function () {
+                return message.classList.add('appeared');
+            }, 0);
+        };
+    }(this);
+    return this;
+}
+
+function sendSpecificAnswer(data, message_side) {
+   
+    let $messages, message;
+    $('.message_input').val('');
+    $messages = $('.messages');
+    message = new sendSpecificMessage({
+        data : data,
+        message_side: message_side
+    });
+    message.draw();
+    $messages.animate({scrollTop: $messages.prop('scrollHeight')}, 300);
+}
+
+function sendSpecificMessage(arg){
+    let data = arg.data;
+
+    let replaceEmptyData = '해당 정보는 제공할 수 없습니다.';
+    let facltNm = (data.facltNm.length > 0) ? data.facltNm : replaceEmptyData;
+    let homepage = (data.homepage.length>0)? data.homepage : replaceEmptyData;
+    let animalCmgCl = (data.animalCmgCl.length>0)? data.animalCmgCl : replaceEmptyData;
+    let lineIntro = (data.lineIntro.length>0)? data.lineIntro : replaceEmptyData;
+    let posblFcltyCl = (data.posblFcltyCl.length>0)? data.posblFcltyCl : replaceEmptyData;
+    let tel = (data.tel.length > 0) ? data.tel : replaceEmptyData;
+
+    let specific_object = {
+        '이름' :facltNm,
+        '한줄소개': lineIntro,
+        '전화' : tel,
+        '장비대여' : posblFcltyCl,
+        '홈페이지' : homepage,
+        '애완동물 출입' : animalCmgCl,
+        
+    };
+
+    let ul = document.createElement('ul');
+    
+    for(specific in specific_object){
+       let li =  document.createElement('li');
+       let text = specific+" : "+ specific_object[specific];
+       li.innerHTML = text;
+       ul.appendChild(li);
+    }
+    
+    this.message_side = arg.message_side;
+		// 메시지 출력 멤버 함수 정의
+    this.draw = function (_this) {
+        return function () {
+            let messages =document.querySelector('.messages');
+            // get message_template .message
+            let message_template = document.querySelector('.message_template > .message');
+            // copy .message
+            let  message = message_template.cloneNode(true);
+            // addClassName 
+            message.classList.add(_this.message_side);
+            // get div class='text_wrapper'
+            let text_wrapper = message.querySelector('.text_wrapper');
+            // get div class ='text'
+            let text = text_wrapper.querySelector('.text');
+           // append specific data unorderd list 
+            text.append(ul);
+            
+            messages.appendChild(message);
+            return setTimeout(function () {
+                return message.classList.add('appeared');
+            }, 0);
+        };
+    }(this);
+    return this;
+    
+    // addr1
+    // addr2
+    // animalCmgCl
+    // facltNm
+    // firstImageUrl
+    // homepage
+    // lctCl
+    // lineIntro
+    // posblFcltyCl
+    // tel
 }
 
 function onSendButtonClicked() {    // 전송 버튼을 누르면
