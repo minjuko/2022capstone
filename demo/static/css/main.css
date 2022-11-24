@@ -97,6 +97,14 @@ body {
     
 }
 
+.answer {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    columns: auto;
+    flex-direction: column;
+}
+
 .messages .message {
     clear: both;
     overflow: hidden;
@@ -128,6 +136,28 @@ body {
     border-right-color:#b2d7c1;
 }*/
 
+/* 캠핑 장비 버튼 */
+.selectequipment:hover {
+    color: #659177;
+    background-color: rgb(225, 225, 225);
+}
+
+button.selectequipment{
+    position: relative;
+    background-color: #e8f4e5;
+    border-width: medium;
+    border-color:rgb(255, 255, 255) ;
+    border-style: solid;
+    padding: 3px 3px;
+    border-radius: 4px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: 0.25s;
+    margin-right: 6px;
+    margin-bottom: 6px;
+
+}
+
 .region:hover {
     color: #659177;
     background-color: rgb(225, 225, 225);
@@ -145,6 +175,7 @@ button.region{
     text-decoration: none;
     font-weight: 600;
     transition: 0.25s;
+    margin-bottom: 6px;
 }
 
 .theme:hover {
@@ -164,6 +195,7 @@ button.theme{
     text-decoration: none;
     font-weight: 600;
     transition: 0.25s;
+    margin-bottom: 6px;
 }
 
 .equipment:hover {
@@ -183,6 +215,7 @@ button.equipment{
     text-decoration: none;
     font-weight: 600;
     transition: 0.25s;
+    margin-bottom: 6px;
 }
 
 /* 체크박스 */
