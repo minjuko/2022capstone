@@ -71,59 +71,283 @@ function seperateURL(textUrlMsg) {  // 서버에서 문자열 받아서 채팅�
 
 function FinSelectTheme(){
 
-    let themeArray = new Array();
-    let themeIndex = 0;
-
+    let themestr = new String("");
+    let isFirst = true;
+    
     const checkbox1 = document.getElementById('노을');
     const is_checked1 = checkbox1.checked;
-    if(is_checked1) themeArray[themeIndex++] = '노을';
+    if(is_checked1) {
+        if(isFirst){
+            themestr+='노을';
+            isFirst=false;
+        }
+        else {
+            themestr +=',노을';
+        }
+    }
 
 
-    const checkbox2 = document.getElementById('바다'); 
+    const checkbox2 = document.getElementById('바다');
     const is_checked2 = checkbox2.checked;
-    if(is_checked2) themeArray[themeIndex++] = '바다';
-    
+    if(is_checked2) {
+        if(isFirst){
+            themestr+='바다';
+            isFirst=false;
+        }
+        else {
+            themestr +=',바다';
+        }
+    }
 
     const checkbox3 = document.getElementById('반려동물');
     const is_checked3 = checkbox3.checked;
-    if(is_checked3) themeArray[themeIndex++] = '반려동물';
-    
+    if(is_checked3) {
+        if(isFirst){
+            themestr+='반려동물';
+            isFirst=false;
+        }
+        else {
+            themestr +=',반려동물';
+        }
+    }
+
     const checkbox4 = document.getElementById('별');
     const is_checked4 = checkbox4.checked;
-    if(is_checked4) themeArray[themeIndex++] = '별';
-    
+    if(is_checked4) {
+        if(isFirst){
+            themestr+='별';
+            isFirst=false;
+        }
+        else {
+            themestr +=',별';
+        }
+    }
+
     const checkbox5 = document.getElementById('아이');
     const is_checked5 = checkbox5.checked;
-    if(is_checked5) themeArray[themeIndex++] = '아이';
+    if(is_checked5) {
+        if(isFirst){
+            themestr+='아이';
+            isFirst=false;
+        }
+        else {
+            themestr +=',아이';
+        }
+    }
 
     const checkbox6 = document.getElementById('물놀이');
     const is_checked6 = checkbox6.checked;
-    if(is_checked6) themeArray[themeIndex++] = '물놀이';
+    if(is_checked6) {
+        if(isFirst){
+            themestr+='물놀이';
+            isFirst=false;
+        }
+        else {
+            themestr +=',물놀이';
+        }
+    }
 
     const checkbox7 = document.getElementById('한적한');
     const is_checked7 = checkbox7.checked;
-    if(is_checked7) themeArray[themeIndex++] = '한적한';
+    if(is_checked7) {
+        if(isFirst){
+            themestr+='한적한';
+            isFirst=false;
+        }
+        else {
+            themestr +=',한적한';
+        }
+    }
 
     const checkbox8 = document.getElementById('단풍');
     const is_checked8 = checkbox8.checked;
-    if(is_checked8) themeArray[themeIndex++] = '단풍';
+    if(is_checked8) {
+        if(isFirst){
+            themestr+='단풍';
+            isFirst=false;
+        }
+        else {
+            themestr +=',단풍';
+        }
+    }
 
     const checkbox9 = document.getElementById('바베큐');
     const is_checked9 = checkbox9.checked;
-    if(is_checked9) themeArray[themeIndex++] = '바베큐';
+    if(is_checked9) {
+        if(isFirst){
+            themestr+='바베큐';
+            isFirst=false;
+        }
+        else {
+            themestr +=',바베큐';
+        }
+    }
 
     const checkbox10 = document.getElementById('구경');
     const is_checked10 = checkbox10.checked;
-    if(is_checked10) themeArray[themeIndex++] = '구경';
+    if(is_checked10) {
+        if(isFirst){
+            themestr+='구경';
+            isFirst=false;
+        }
+        else {
+            themestr +=',구경';
+        }
+    }
 
     if(themeIndex>3){
         alert("3개까지 선택 가능");
     }
     else{
-        requestChat(themeArray,'selection2');
-        // sendMessage("[테마기반 서버에 보낼 메세지:" + themeArray + "]", 'left');
+        sendMessage("[테마기반 서버에 보낼 메세지:" + themeArray + "]", 'left');
     }
-    
+
+}
+function FinSelectTheme(){
+
+    let themestr = "";
+    let isFirst = true;
+    let themeIndex = 0;
+
+    const checkbox1 = document.getElementById('노을');
+    const is_checked1 = checkbox1.checked;
+    if(is_checked1) {
+        if(isFirst){
+            themestr+='노을';
+            isFirst=false;
+            themeIndex++
+        }
+        else {
+            themestr +=',노을';
+        }
+    }
+
+
+    const checkbox2 = document.getElementById('바다');
+    const is_checked2 = checkbox2.checked;
+    if(is_checked2) {
+        if(isFirst){
+            themestr+='바다';
+            isFirst=false;
+            themeIndex++
+        }
+        else {
+            themestr +=',바다';
+        }
+    }
+
+    const checkbox3 = document.getElementById('반려동물');
+    const is_checked3 = checkbox3.checked;
+    if(is_checked3) {
+        if(isFirst){
+            themestr+='반려동물';
+            isFirst=false;
+            themeIndex++
+        }
+        else {
+            themestr +=',반려동물';
+        }
+    }
+
+    const checkbox4 = document.getElementById('별');
+    const is_checked4 = checkbox4.checked;
+    if(is_checked4) {
+        if(isFirst){
+            themestr+='별';
+            isFirst=false;
+            themeIndex++
+        }
+        else {
+            themestr +=',별';
+        }
+    }
+
+    const checkbox5 = document.getElementById('아이');
+    const is_checked5 = checkbox5.checked;
+    if(is_checked5) {
+        if(isFirst){
+            themestr+='아이';
+            isFirst=false;
+            themeIndex++
+        }
+        else {
+            themestr +=',아이';
+        }
+    }
+
+    const checkbox6 = document.getElementById('물놀이');
+    const is_checked6 = checkbox6.checked;
+    if(is_checked6) {
+        if(isFirst){
+            themestr+='물놀이';
+            isFirst=false;
+            themeIndex++
+        }
+        else {
+            themestr +=',물놀이';
+        }
+    }
+
+    const checkbox7 = document.getElementById('한적한');
+    const is_checked7 = checkbox7.checked;
+    if(is_checked7) {
+        if(isFirst){
+            themestr+='한적한';
+            isFirst=false;
+            themeIndex++
+        }
+        else {
+            themestr +=',한적한';
+        }
+    }
+
+    const checkbox8 = document.getElementById('단풍');
+    const is_checked8 = checkbox8.checked;
+    if(is_checked8) {
+        if(isFirst){
+            themestr+='단풍';
+            isFirst=false;
+            themeIndex++
+        }
+        else {
+            themestr +=',단풍';
+        }
+    }
+
+    const checkbox9 = document.getElementById('바베큐');
+    const is_checked9 = checkbox9.checked;
+    if(is_checked9) {
+        if(isFirst){
+            themestr+='바베큐';
+            isFirst=false;
+            themeIndex++
+        }
+        else {
+            themestr +=',바베큐';
+        }
+    }
+
+    const checkbox10 = document.getElementById('구경');
+    const is_checked10 = checkbox10.checked;
+    if(is_checked10) {
+        if(isFirst){
+            themestr+='구경';
+            isFirst=false;
+            themeIndex++
+        }
+        else {
+            themestr +=',구경';
+        }
+    }
+
+    if(themeIndex>3){
+        alert("3개까지 선택 가능");
+    }
+    else{
+        sendMessage("[테마기반 서버에 보낼 메세지str:" + themestr + "]", 'left');
+        requestChat(themestr,'selection2');
+    }
+
 }
 
 function 장비선택(){
