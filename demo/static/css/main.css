@@ -108,7 +108,7 @@ body {
 .messages .message {
     clear: both;
     overflow: hidden;
-    margin-bottom: 10px;
+    margin-bottom: -10px;
     transition: all 0.5s linear;
     opacity: 0;
 }
