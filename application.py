@@ -1,11 +1,11 @@
 from flask import render_template
 
+
 from kochat.app import KochatApi
 from kochat.data import Dataset
 from kochat.loss import CRFLoss, CosFace, CenterLoss, COCOLoss, CrossEntropyLoss
 from kochat.model import intent, embed, entity
 from kochat.proc import DistanceClassifier, GensimEmbedder, EntityRecognizer, SoftmaxClassifier
-
 from scenario import dust, weather, travel, restaurant
 
 # from scenario import dust, weather, travel, restaurant
@@ -32,7 +32,7 @@ kochat = KochatApi(
     intent_classifier=(clf),
     entity_recognizer=(rcn),
     scenarios=[
-        weather, dust, travel, restaurant
+        weather, dust, travel, restaurant,
     ]
 )
 

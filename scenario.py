@@ -2,7 +2,7 @@ from kocrawl.dust import DustCrawler
 from kocrawl.weather import WeatherCrawler
 from kochat.app import Scenario
 from kocrawl.map import MapCrawler
-from kocrawl.camp import CampCrawler
+from camp import CampCrawler
 weather = Scenario(
     intent='weather',
     api=WeatherCrawler().request,
