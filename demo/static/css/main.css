@@ -548,6 +548,40 @@ body {
     line-height: 1.55;
 }
 
+.demo_response {
+    display: grid;
+    gap: 7px;
+}
+
+.demo_response > span {
+    width: fit-content;
+    padding: 3px 6px;
+    border-radius: 5px;
+    background: rgba(40, 122, 117, 0.13);
+    color: var(--campster-primary);
+    font-size: 8px;
+    letter-spacing: 0.08em;
+}
+
+.demo_response > strong {
+    font-size: 12px;
+}
+
+.demo_response > p,
+.demo_response > small {
+    margin: 0;
+    font-weight: 500;
+}
+
+.demo_response > p {
+    color: var(--campster-text);
+}
+
+.demo_response > small {
+    color: var(--campster-muted);
+    line-height: 1.5;
+}
+
 .bottom_wrapper {
     padding: 14px 16px 0;
     border-top: 1px solid #e1ebe8;
@@ -704,45 +738,174 @@ body {
 }
 
 .community_content {
-    max-width: 360px;
-    margin: 0 auto;
+    width: 100%;
+    max-width: none;
+    margin: 0;
+    padding: 20px 18px 24px;
+    display: block;
+    overflow-y: auto;
+    text-align: left;
 }
 
-.community_icon {
-    width: 70px;
-    height: 70px;
-    display: grid;
-    place-items: center;
-    margin-bottom: 20px;
-    border-radius: 22px;
-    background: #e4f2ed;
-    color: var(--campster-primary);
-    font-size: 34px;
+.community_heading {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 16px;
 }
 
 .community_content .eyebrow {
-    margin: 0 0 8px;
+    margin: 0 0 5px;
     color: var(--campster-primary);
     font-size: 9px;
     letter-spacing: 0.12em;
 }
 
 .community_content h2 {
-    margin: 0 0 14px;
-    font-size: 24px;
-}
-
-.community_content > p:not(.eyebrow) {
     margin: 0;
-    color: var(--campster-muted);
-    font-size: 13px;
-    font-weight: 500;
-    line-height: 1.7;
+    font-size: 22px;
 }
 
-.community_content .scope_note {
-    margin-top: 8px !important;
-    font-size: 11px !important;
+.write_button {
+    min-width: 64px;
+    height: 34px;
+    padding: 0 13px;
+    border: 0;
+    border-radius: 10px;
+    background: #dceae6;
+    color: #71827e;
+    font-size: 11px;
+    cursor: not-allowed;
+}
+
+.community_categories {
+    display: flex;
+    gap: 7px;
+    margin: 18px -18px 15px;
+    padding: 0 18px 4px;
+    overflow-x: auto;
+    scrollbar-width: none;
+}
+
+.community_categories::-webkit-scrollbar {
+    display: none;
+}
+
+.category_chip {
+    flex: 0 0 auto;
+    height: 32px;
+    padding: 0 13px;
+    border: 1px solid #d8e5e1;
+    border-radius: 999px;
+    background: white;
+    color: var(--campster-muted);
+    font-size: 11px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: border-color 0.18s ease, background-color 0.18s ease, color 0.18s ease;
+}
+
+.category_chip:hover,
+.category_chip:focus-visible {
+    border-color: var(--campster-primary);
+    color: var(--campster-primary);
+    outline: none;
+}
+
+.category_chip.active,
+.category_chip.active:hover,
+.category_chip.active:focus-visible {
+    border-color: var(--campster-primary);
+    background: var(--campster-primary);
+    color: white;
+}
+
+.post_list {
+    display: grid;
+    gap: 11px;
+}
+
+.post_card {
+    padding: 15px;
+    border: 1px solid #dfe9e6;
+    border-radius: 16px;
+    background: white;
+    box-shadow: 0 5px 18px rgba(41, 83, 77, 0.05);
+}
+
+.post_card[hidden] {
+    display: none;
+}
+
+.post_card.featured {
+    border-color: #bcd9d1;
+    background: linear-gradient(135deg, #f4fbf8 0%, #ffffff 70%);
+}
+
+.post_meta,
+.post_stats {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    color: #8a9895;
+    font-size: 9px;
+    font-weight: 500;
+}
+
+.post_category {
+    padding: 4px 7px;
+    border-radius: 6px;
+    font-size: 9px;
+    font-weight: 700;
+}
+
+.post_category.review {
+    background: #e7f3ef;
+    color: #287a75;
+}
+
+.post_category.market {
+    background: #fff1dc;
+    color: #a56512;
+}
+
+.post_category.recommendation {
+    background: #ecedff;
+    color: #6266a7;
+}
+
+.post_card h3 {
+    margin: 11px 0 7px;
+    color: var(--campster-text);
+    font-size: 14px;
+    line-height: 1.4;
+}
+
+.post_card > p {
+    margin: 0 0 13px;
+    color: var(--campster-muted);
+    font-size: 10px;
+    font-weight: 500;
+    line-height: 1.6;
+}
+
+.post_stats {
+    justify-content: flex-start;
+}
+
+.post_stats strong {
+    color: var(--campster-primary);
+    font-size: 12px;
+}
+
+.prototype_note {
+    margin: 14px 4px 0;
+    color: #879490;
+    font-size: 9px;
+    font-weight: 500;
+    line-height: 1.55;
+    text-align: center;
 }
 
 .page_nav {

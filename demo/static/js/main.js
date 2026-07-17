@@ -7,18 +7,25 @@ let userName = null;
 let state = 'SUCCESS';
 let selectedBUTTON = 0;
 const API_BASE_URL = window.CAMPSTER_API_URL || 'http://127.0.0.1:8080';
+const IS_FRONTEND_DEMO = !window.CAMPSTER_API_URL;
 const OFFLINE_MESSAGE = '현재는 프론트엔드 데모 모드입니다. 추천 결과를 불러오는 백엔드 서버가 연결되어 있지 않습니다.';
 
 // functions
 function Message(arg) {
     this.text = arg.text;
     this.message_side = arg.message_side;
+    this.allow_html = arg.allow_html;
 
     this.draw = function (_this) {
         return function () {
             let $message;
             $message = $($('.message_template').clone().html());
-            $message.addClass(_this.message_side).find('.text').html(_this.text);
+            const $text = $message.addClass(_this.message_side).find('.text');
+            if (_this.allow_html) {
+                $text.html(_this.text);
+            } else {
+                $text.text(_this.text);
+            }
             $('.messages').append($message);
 
             return setTimeout(function () {
@@ -35,13 +42,14 @@ function getMessageText() {
     return $message_input.val();
 }
 
-function sendMessage(text, message_side) {
+function sendMessage(text, message_side, allow_html = true) {
     let $messages, message;
     $('.message_input').val('');
     $messages = $('.messages');
     message = new Message({
         text: text,
-        message_side: message_side
+        message_side: message_side,
+        allow_html: allow_html
     });
     message.draw();
     $messages.animate({scrollTop: $messages.prop('scrollHeight')}, 300);
@@ -463,6 +471,11 @@ function 등산용품(){
 
 // 장비 서버에게 요청
 function FinEq(obj){    // obj 문자열로 바꾸고
+    if (IS_FRONTEND_DEMO) {
+        sendMessage('선택한 장비: ' + obj, 'right', false);
+        return sendDemoNotice('장비 추천', obj);
+    }
+
     $.ajax({
         url: API_BASE_URL + '/selection1/' + encodeURIComponent(userName) + '/' + encodeURIComponent(obj),
         type: "GET",
@@ -499,6 +512,31 @@ function CheckNum(e){
 
 }
 
+function submitSelectedThemes() {
+    const selectedThemes = Array.from(document.querySelectorAll('.boxes input[type="checkbox"]:checked'))
+        .map((checkbox) => checkbox.id);
+
+    if (selectedThemes.length === 0) {
+        return sendMessage('원하는 테마를 한 개 이상 선택해주세요.', 'left');
+    }
+
+    const themeText = selectedThemes.join(', ');
+    sendMessage('선택한 테마: ' + themeText, 'right', false);
+    return requestChat(themeText, 'selection2');
+}
+
+function sendDemoNotice(type, query) {
+    const safeType = $('<div>').text(type).html();
+    const safeQuery = $('<div>').text(query).html();
+    return sendMessage(
+        "<div class='demo_response'><span>FRONTEND DEMO</span>" +
+        "<strong>" + safeType + " 요청을 확인했어요.</strong>" +
+        "<p>입력값: " + safeQuery + "</p>" +
+        "<small>AWS 백엔드 연결 시 실제 추천 결과가 이 영역에 표시됩니다.</small></div>",
+        'left'
+    );
+}
+
 function onClickAsEnter(e) {
     if (e.key === 'Enter' && !e.isComposing) {
         onSendButtonClicked()
@@ -526,7 +564,7 @@ function selectNUM2() {
                 "<input type=checkbox name='chk' onchange='CheckNum(event);' id='바베큐' > <label for='바베큐'>#바베큐하기 좋은</label><br>"+
                 "<input type=checkbox name='chk' onchange='CheckNum(event);' id='구경'> <label for='구경'>#구경거리가 있는</label><br>"+
 
-                "<button class='check' onclick='FinSelectTheme();'>선택완료</button>", 'left');
+                "<button class='check' onclick='submitSelectedThemes();'>선택완료</button>", 'left');
             
 }
 
@@ -561,6 +599,11 @@ function setUserName(username) {
 }
 
 function requestChat(messageText, url_pattern) {
+    if (IS_FRONTEND_DEMO) {
+        const requestType = url_pattern === 'selection2' ? '테마 기반 캠핑장 추천' : '캠핑장 추천';
+        return sendDemoNotice(requestType, messageText);
+    }
+
     $.ajax({
         url: API_BASE_URL + '/' + url_pattern + '/' + encodeURIComponent(userName) + '/' + encodeURIComponent(messageText),
         type: "GET",
@@ -744,7 +787,7 @@ function onSendButtonClicked() {    // 전송 버튼을 누르면
     if (messageText === '') {
         return;
     }
-    sendMessage(messageText, 'right');
+    sendMessage(messageText, 'right', false);
 
     if (userName == null) {
         userName = setUserName(messageText);
