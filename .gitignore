@@ -3,6 +3,7 @@ saved/
 # vscode
 .vscode/
 .idea/
+*.iml
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]

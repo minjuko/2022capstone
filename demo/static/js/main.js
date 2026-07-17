@@ -2,7 +2,7 @@
 // 장비는 문장 3개 다 보내는거, 테마 기반은 선택한 해시태그 여러개 보내는거
 
 
-// variables 
+// variables
 let userName = null;
 let state = 'SUCCESS';
 let selectedBUTTON = 0;
@@ -65,301 +65,6 @@ function greet() {
     }, 2000);
 }
 
-function seperateURL(textUrlMsg) {  // 서버에서 문자열 받아서 채팅창에 올리는 함수. 
-    let fromServerMsg = new String();
-    fromServerMsg = textUrlMsg; // 여기에 서버에서 온 문자열(textUrlMsg) 넣기
-    let leftIndex = fromServerMsg.indexOf('{{',[0]);
-    let rightIndex = fromServerMsg.indexOf('}}',[0]) + 2;
-    let leftMsg = fromServerMsg.substring(0,leftIndex);
-    let rightMsg = fromServerMsg.substring(rightIndex,fromServerMsg.length);
-    let textMsg = leftMsg.concat(rightMsg);
-    let urlMsg = fromServerMsg.substring(leftIndex+2,rightIndex-2);
-    
-    sendMessage("서버에서 온 메세지에서 url 분리하기", 'left');
-    sendMessage("<img width=80% height=80% src='"+urlMsg+"'> <br>" + textMsg  , 'left');
-}
-
-function FinSelectTheme(){
-
-    let themestr = new String("");
-    let isFirst = true;
-    
-    const checkbox1 = document.getElementById('노을');
-    const is_checked1 = checkbox1.checked;
-    if(is_checked1) {
-        if(isFirst){
-            themestr+='노을';
-            isFirst=false;
-        }
-        else {
-            themestr +=',노을';
-        }
-    }
-
-
-    const checkbox2 = document.getElementById('바다');
-    const is_checked2 = checkbox2.checked;
-    if(is_checked2) {
-        if(isFirst){
-            themestr+='바다';
-            isFirst=false;
-        }
-        else {
-            themestr +=',바다';
-        }
-    }
-
-    const checkbox3 = document.getElementById('반려동물');
-    const is_checked3 = checkbox3.checked;
-    if(is_checked3) {
-        if(isFirst){
-            themestr+='반려동물';
-            isFirst=false;
-        }
-        else {
-            themestr +=',반려동물';
-        }
-    }
-
-    const checkbox4 = document.getElementById('별');
-    const is_checked4 = checkbox4.checked;
-    if(is_checked4) {
-        if(isFirst){
-            themestr+='별';
-            isFirst=false;
-        }
-        else {
-            themestr +=',별';
-        }
-    }
-
-    const checkbox5 = document.getElementById('아이');
-    const is_checked5 = checkbox5.checked;
-    if(is_checked5) {
-        if(isFirst){
-            themestr+='아이';
-            isFirst=false;
-        }
-        else {
-            themestr +=',아이';
-        }
-    }
-
-    const checkbox6 = document.getElementById('물놀이');
-    const is_checked6 = checkbox6.checked;
-    if(is_checked6) {
-        if(isFirst){
-            themestr+='물놀이';
-            isFirst=false;
-        }
-        else {
-            themestr +=',물놀이';
-        }
-    }
-
-    const checkbox7 = document.getElementById('한적한');
-    const is_checked7 = checkbox7.checked;
-    if(is_checked7) {
-        if(isFirst){
-            themestr+='한적한';
-            isFirst=false;
-        }
-        else {
-            themestr +=',한적한';
-        }
-    }
-
-    const checkbox8 = document.getElementById('단풍');
-    const is_checked8 = checkbox8.checked;
-    if(is_checked8) {
-        if(isFirst){
-            themestr+='단풍';
-            isFirst=false;
-        }
-        else {
-            themestr +=',단풍';
-        }
-    }
-
-    const checkbox9 = document.getElementById('바베큐');
-    const is_checked9 = checkbox9.checked;
-    if(is_checked9) {
-        if(isFirst){
-            themestr+='바베큐';
-            isFirst=false;
-        }
-        else {
-            themestr +=',바베큐';
-        }
-    }
-
-    const checkbox10 = document.getElementById('구경');
-    const is_checked10 = checkbox10.checked;
-    if(is_checked10) {
-        if(isFirst){
-            themestr+='구경';
-            isFirst=false;
-        }
-        else {
-            themestr +=',구경';
-        }
-    }
-
-    if(themeIndex>3){
-        alert("3개까지 선택 가능");
-    }
-    else{
-        sendMessage("[테마기반 서버에 보낼 메세지:" + themeArray + "]", 'left');
-    }
-
-}
-function FinSelectTheme(){
-
-    let themestr = "";
-    let isFirst = true;
-    let themeIndex = 0;
-
-    const checkbox1 = document.getElementById('노을');
-    const is_checked1 = checkbox1.checked;
-    if(is_checked1) {
-        if(isFirst){
-            themestr+='노을';
-            isFirst=false;
-            themeIndex++
-        }
-        else {
-            themestr +=',노을';
-        }
-    }
-
-
-    const checkbox2 = document.getElementById('바다');
-    const is_checked2 = checkbox2.checked;
-    if(is_checked2) {
-        if(isFirst){
-            themestr+='바다';
-            isFirst=false;
-            themeIndex++
-        }
-        else {
-            themestr +=',바다';
-        }
-    }
-
-    const checkbox3 = document.getElementById('반려동물');
-    const is_checked3 = checkbox3.checked;
-    if(is_checked3) {
-        if(isFirst){
-            themestr+='반려동물';
-            isFirst=false;
-            themeIndex++
-        }
-        else {
-            themestr +=',반려동물';
-        }
-    }
-
-    const checkbox4 = document.getElementById('별');
-    const is_checked4 = checkbox4.checked;
-    if(is_checked4) {
-        if(isFirst){
-            themestr+='별';
-            isFirst=false;
-            themeIndex++
-        }
-        else {
-            themestr +=',별';
-        }
-    }
-
-    const checkbox5 = document.getElementById('아이');
-    const is_checked5 = checkbox5.checked;
-    if(is_checked5) {
-        if(isFirst){
-            themestr+='아이';
-            isFirst=false;
-            themeIndex++
-        }
-        else {
-            themestr +=',아이';
-        }
-    }
-
-    const checkbox6 = document.getElementById('물놀이');
-    const is_checked6 = checkbox6.checked;
-    if(is_checked6) {
-        if(isFirst){
-            themestr+='물놀이';
-            isFirst=false;
-            themeIndex++
-        }
-        else {
-            themestr +=',물놀이';
-        }
-    }
-
-    const checkbox7 = document.getElementById('한적한');
-    const is_checked7 = checkbox7.checked;
-    if(is_checked7) {
-        if(isFirst){
-            themestr+='한적한';
-            isFirst=false;
-            themeIndex++
-        }
-        else {
-            themestr +=',한적한';
-        }
-    }
-
-    const checkbox8 = document.getElementById('단풍');
-    const is_checked8 = checkbox8.checked;
-    if(is_checked8) {
-        if(isFirst){
-            themestr+='단풍';
-            isFirst=false;
-            themeIndex++
-        }
-        else {
-            themestr +=',단풍';
-        }
-    }
-
-    const checkbox9 = document.getElementById('바베큐');
-    const is_checked9 = checkbox9.checked;
-    if(is_checked9) {
-        if(isFirst){
-            themestr+='바베큐';
-            isFirst=false;
-            themeIndex++
-        }
-        else {
-            themestr +=',바베큐';
-        }
-    }
-
-    const checkbox10 = document.getElementById('구경');
-    const is_checked10 = checkbox10.checked;
-    if(is_checked10) {
-        if(isFirst){
-            themestr+='구경';
-            isFirst=false;
-            themeIndex++
-        }
-        else {
-            themestr +=',구경';
-        }
-    }
-
-    if(themeIndex>3){
-        alert("3개까지 선택 가능");
-    }
-    else{
-        sendMessage("[테마기반 서버에 보낼 메세지str:" + themestr + "]", 'left');
-        requestChat(themestr,'selection2');
-    }
-
-}
-
 function 장비선택(){
     return sendMessage("<button class='selectequipment' onclick='텐트();' >텐트</button>" +
                         "<button class='selectequipment' onclick='침낭ㆍ매트();'>침낭ㆍ매트</button>" +
@@ -381,7 +86,7 @@ function 텐트(){
     "<button class='selectequipment' onclick=FinEq('면텐트'); >면텐트</button>" +
     "<button class='selectequipment' onclick=FinEq('타프텐트/타프옵션'); >타프텐트/타프옵션</button>" +
     "<button class='selectequipment' onclick=FinEq('팝업/그늘막/스크린'); >팝업/그늘막/스크린</button>" +
-    "<button class='selectequipment' onclick=FinEq('폴대/펙/스트링/스토퍼'); >폴대/펙/스트링/스토퍼</button>" ,'left'); 
+    "<button class='selectequipment' onclick=FinEq('폴대/펙/스트링/스토퍼'); >폴대/펙/스트링/스토퍼</button>" ,'left');
 }
 
 function 침낭ㆍ매트(){
@@ -390,7 +95,7 @@ function 침낭ㆍ매트(){
     "<button class='selectequipment' onclick=FinEq('카페트/블랑켓/러그'); >카페트/블랑켓/러그</button>" +
     "<button class='selectequipment' onclick=FinEq('발포매트/폼매트/레저시트'); >발포매트/폼매트/레저시트</button>" +
     "<button class='selectequipment' onclick=FinEq('전기매트'); >전기매트</button>" +
-    "<button class='selectequipment' onclick=FinEq('베개/방석/쿠션'); >베개/방석/쿠션</button>" ,'left'); 
+    "<button class='selectequipment' onclick=FinEq('베개/방석/쿠션'); >베개/방석/쿠션</button>" ,'left');
 }
 
 function 퍼니처(){
@@ -398,7 +103,7 @@ function 퍼니처(){
     "<button class='selectequipment' onclick=FinEq('릴렉스체어') >릴렉스체어</button>" +
     "<button class='selectequipment' onclick=FinEq('미니/경량체어'); >미니/경량체어</button>" +
     "<button class='selectequipment' onclick=FinEq('야전침대'); >야전침대</button>" +
-    "<button class='selectequipment' onclick=FinEq('해먹/스탠드'); >해먹/스탠드</button>",'left'); 
+    "<button class='selectequipment' onclick=FinEq('해먹/스탠드'); >해먹/스탠드</button>",'left');
 }
 
 function 라이팅(){
@@ -406,7 +111,7 @@ function 라이팅(){
     "<button class='selectequipment' onclick=FinEq('가스/오일랜턴') >가스/오일랜턴</button>" +
     "<button class='selectequipment' onclick=FinEq('LED랜턴/충전식랜턴'); >LED랜턴/충전식랜턴</button>" +
     "<button class='selectequipment' onclick=FinEq('헤드랜턴/후레쉬'); >헤드랜턴/후레쉬</button>" +
-    "<button class='selectequipment' onclick=FinEq('릴선/연장선'); >릴선/연장선</button>" ,'left'); 
+    "<button class='selectequipment' onclick=FinEq('릴선/연장선'); >릴선/연장선</button>" ,'left');
 }
 
 function 화로() {
@@ -454,19 +159,19 @@ function RV용품(){
     return sendMessage("<button class='selectequipment' onclick=FinEq('트레일러'); >트레일러</button>" +
     "<button class='selectequipment' onclick=FinEq('루프탑텐트') >루프탑텐트</button>" +
     "<button class='selectequipment' onclick=FinEq('루프백/루프박스'); >루프백/루프박스</button>" +
-    "<button class='selectequipment' onclick=FinEq('차량용에어매트'); >차량용에어매트</button>" ,'left'); 
+    "<button class='selectequipment' onclick=FinEq('차량용에어매트'); >차량용에어매트</button>" ,'left');
 }
 
 function 악세서리(){
     return sendMessage("<button class='selectequipment' onclick=FinEq('해머/톱/삽/도끼'); >해머/톱/삽/도끼</button>" +
     "<button class='selectequipment' onclick=FinEq('나이프/TOOL') >나이프/TOOL</button>" +
     "<button class='selectequipment' onclick=FinEq('비너/열쇠고리'); >비너/열쇠고리</button>" +
-    "<button class='selectequipment' onclick=FinEq('데코/장식용품'); >데코/장식용품</button>",'left'); 
+    "<button class='selectequipment' onclick=FinEq('데코/장식용품'); >데코/장식용품</button>",'left');
 }
 
 function 등산용품(){
     return sendMessage("<button class='selectequipment' onclick=FinEq('샤워/청소/세탁용품'); >샤워/청소/세탁용품</button>" +
-    "<button class='selectequipment' onclick=FinEq('영상/음향/캠핑도서') >영상/음향/캠핑도서</button>" ,'left'); 
+    "<button class='selectequipment' onclick=FinEq('영상/음향/캠핑도서') >영상/음향/캠핑도서</button>" ,'left');
 }
 
 // 장비 서버에게 요청
@@ -492,7 +197,7 @@ function FinEq(obj){    // obj 문자열로 바꾸고
         },
 
         error: function (request, status, error) {
-            console.log(error);
+            console.warn('Equipment API request failed:', status, error);
             return sendMessage(OFFLINE_MESSAGE, 'left');
         }
     });
@@ -542,7 +247,6 @@ function onClickAsEnter(e) {
         onSendButtonClicked()
     }
 }
-
 function selectNUM1() {
     selectedBUTTON = 1;
     sendMessage("원하는 지역이나 입지가 있으시다면 입력해주세요",'left');
@@ -552,7 +256,7 @@ function selectNUM1() {
 function selectNUM2() {
 
     selectedBUTTON = 2;
-    sendMessage("<div class= 'boxes'>" + 
+    sendMessage("<div class= 'boxes'>" +
                 "<input type=checkbox name='chk' onchange='CheckNum(event);' id='노을' > <label for='노을'>#노을 뷰가 있는</label><br>" +
                 "<input type=checkbox name='chk' onchange='CheckNum(event);' id='바다' > <label for='바다'>#바다가 보이는</label><br>"+
                 "<input type=checkbox name='chk' onchange='CheckNum(event);' id='반려동물' > <label for='반려동물'>#반려동물과 함께하는</label><br>"+
@@ -565,7 +269,7 @@ function selectNUM2() {
                 "<input type=checkbox name='chk' onchange='CheckNum(event);' id='구경'> <label for='구경'>#구경거리가 있는</label><br>"+
 
                 "<button class='check' onclick='submitSelectedThemes();'>선택완료</button>", 'left');
-            
+
 }
 
 function selectNUM3() {
@@ -578,7 +282,6 @@ function selectNUM3() {
 
 
 function setUserName(username) {
-    let selectNUM;
     if (username != null && username.trim() !== '') {
         setTimeout(function () {
             return sendMessage("반가워요 " + username + "님! <br> 아래 세 가지 기능 중 원하시는 기능을 선택해주세요 <i class='fa-regular fa-face-smile'></i>", 'left');
@@ -621,7 +324,7 @@ function requestChat(messageText, url_pattern) {
         },
 
         error: function (request, status, error) {
-            console.log(error);
+            console.warn('Chat API request failed:', status, error);
             return sendMessage(OFFLINE_MESSAGE, 'left');
         }
     });
@@ -644,7 +347,7 @@ function sendAnswer(jsonArray, message_side) {
 function sendResultMessage(arg) {
 
     // arg.text = {"facltNm":... , "lineIntro":... , ... }
-    data = arg.text;
+    const data = arg.text;
     let imgUrl = data.firstImageUrl;
     let facltNm = data.facltNm;
     // make div.answer
@@ -652,26 +355,25 @@ function sendResultMessage(arg) {
     answer_div.classList.add('answer');
     // make title
     let p_name = document.createElement('p');
-    p_name.innerHTML = facltNm;
+    p_name.textContent = facltNm;
     // make image 150*150
     let img =  document.createElement('img');
     img.src = imgUrl;
     img.width = 150;
     img.height = 150;
-    // make button 
+    // make button
     let btn = document.createElement('input');
     btn.type = 'button';
     btn.value = '상세보기';
     btn.style.marginTop = '10px';
     // add eventListener  , 상세정보 메시지 출력 함수(sendSpecificAnswer) callback
     btn.addEventListener('click' , () =>  {
-        console.log('btn clicked');
         sendSpecificAnswer(data, arg.message_side);
     })
     answer_div.append(p_name);
     answer_div.append(img);
     answer_div.append(btn);
-    
+
 
     this.message_side = arg.message_side;
 
@@ -683,7 +385,7 @@ function sendResultMessage(arg) {
             let message_template = document.querySelector('.message_template > .message');
             // copy .message
             let  message = message_template.cloneNode(true);
-            // addClassName 
+            // addClassName
             message.classList.add(_this.message_side);
             // get div class='text_wrapper'
             let text_wrapper = message.querySelector('.text_wrapper');
@@ -691,7 +393,7 @@ function sendResultMessage(arg) {
             let text = text_wrapper.querySelector('.text');
             text.style.textAlign = 'center';
             text.append(answer_div);
-            
+
             messages.appendChild(message);
             return setTimeout(function () {
                 return message.classList.add('appeared');
@@ -702,7 +404,7 @@ function sendResultMessage(arg) {
 }
 
 function sendSpecificAnswer(data, message_side) {
-   
+
     let $messages, message;
     $('.message_input').val('');
     $messages = $('.messages');
@@ -732,18 +434,18 @@ function sendSpecificMessage(arg){
         '장비대여' : posblFcltyCl,
         '홈페이지' : homepage,
         '애완동물 출입' : animalCmgCl,
-        
+
     };
 
     let ul = document.createElement('ul');
-    
-    for(specific in specific_object){
+
+    for (const specific in specific_object) {
        let li =  document.createElement('li');
        let text = specific+" : "+ specific_object[specific];
-       li.innerHTML = text;
+       li.textContent = text;
        ul.appendChild(li);
     }
-    
+
     this.message_side = arg.message_side;
 		// 메시지 출력 멤버 함수 정의
     this.draw = function (_this) {
@@ -753,15 +455,15 @@ function sendSpecificMessage(arg){
             let message_template = document.querySelector('.message_template > .message');
             // copy .message
             let  message = message_template.cloneNode(true);
-            // addClassName 
+            // addClassName
             message.classList.add(_this.message_side);
             // get div class='text_wrapper'
             let text_wrapper = message.querySelector('.text_wrapper');
             // get div class ='text'
             let text = text_wrapper.querySelector('.text');
-           // append specific data unorderd list 
+           // append specific data unorderd list
             text.append(ul);
-            
+
             messages.appendChild(message);
             return setTimeout(function () {
                 return message.classList.add('appeared');
@@ -769,7 +471,7 @@ function sendSpecificMessage(arg){
         };
     }(this);
     return this;
-    
+
     // addr1
     // addr2
     // animalCmgCl
@@ -807,7 +509,7 @@ function onSendButtonClicked() {    // 전송 버튼을 누르면
             }, 1000);
 
 
-        } 
+        }
         // 아래는 지역기반(자연어처리)
         else if (state.includes('REQUIRE')) {
             return requestChat(messageText, 'fill_slot');
@@ -816,66 +518,3 @@ function onSendButtonClicked() {    // 전송 버튼을 누르면
         }
     }
 }
-
-/*
-let tabnav = document.getElementsByClassName("tabnav");
-
-      function handleClick(event) {
-        console.log(event.target);
-        // console.log(this);
-        // 콘솔창을 보면 둘다 동일한 값이 나온다
-
-        console.log(event.target.classList);
-
-        if (event.target.classList[1] === "active") {
-          event.target.classList.remove("active");
-        } else {
-          for (var i = 0; i < tabnav.length; i++) {
-            tabnav[i].classList.remove("active");
-          }
-          event.target.classList.add("active");
-        }
-      }
-
-      function init() {
-        for (var i = 0; i < tabnav.length; i++) {
-            tabnav[i].addEventListener("click", handleClick);
-        }
-      }
-
-      init();
-
-/*
-function getFocus() {
-    document.getElementByName().focus();
-}
-function loseFocus() {
-    document.getElementById().blur();
-}
-function click() {
-    home_btn.style.backgroundColor = "white";
-    cat_btn.style.backgroundColor = "white";
-    community_btn.style.backgroundColor = "white";
-
-    this.style.backgroundColor = "#3b8c87";
-
-    home_btn.addEventListener("click", click);
-    cat_btn.addEventListener("click", click);
-    community_btn.addEventListener("click", click);
-}
-
-$(function(){
-    /*
-    const home_btn = document.getElementByName('home');
-    const chat_btn = document.getElementByName('chat');
-    const community_btn = document.getElementByName('community');
-    home_btn.addEventListener('click', click);
-    chat_btn.addEventListener('click', click);
-    community_btn.addEventListener('click', click);
-    $('.tabnav a').click(function () {
-      $('.tabnav a').removeClass('active');
-      $(this).addClass('active');
-      return false;
-    }).filter(':eq(0)').click();
-});
-*/

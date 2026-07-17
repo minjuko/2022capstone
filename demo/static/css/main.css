@@ -1,14 +1,44 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@700&family=Kanit&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Gothic+A1:wght@300;500;700&display=swap');
+@font-face {
+    font-family: 'Freesentation';
+    src: url('../fonts/Freesentation-4Regular.ttf') format('truetype');
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Freesentation';
+    src: url('../fonts/Freesentation-5Medium.ttf') format('truetype');
+    font-weight: 500;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Freesentation';
+    src: url('../fonts/Freesentation-6SemiBold.ttf') format('truetype');
+    font-weight: 600;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Freesentation';
+    src: url('../fonts/Freesentation-7Bold.ttf') format('truetype');
+    font-weight: 700;
+    font-style: normal;
+    font-display: swap;
+}
+
 * {
     box-sizing: border-box;
-    font-weight: bold;
 }
 
 body {
     /* 전체 배경 */
     background-color: #ffffff;
-    font-family: Arial, Helvetica, sans-serif;
+    font-family: 'Freesentation', 'Malgun Gothic', sans-serif;
+    font-weight: 400;
     background-color: rgb(218, 218, 218);
     display: grid;
     place-items: center;
@@ -69,7 +99,7 @@ body {
     color: #3b8c87 ;
     font-size: 20px;
     font-weight: 600;
-    font-family: 'Kanit', sans-serif;
+    font-family: 'Freesentation', 'Malgun Gothic', sans-serif;
 }
 
 .messages {
@@ -383,7 +413,7 @@ button.check{
 .messages .message .text_wrapper .text {
     font-size: 12px;
     font-weight: 600;
-    font-family: 'Gothic A1', sans-serif;
+    font-family: 'Freesentation', 'Malgun Gothic', sans-serif;
 }
 
 .bottom_wrapper {
@@ -438,7 +468,7 @@ button.check{
 /* 전송 아이콘 기본*/
 .bottom_wrapper .send_message .text {
     font-size: 18px;
-    font-weight: 600px;
+    font-weight: 600;
     display: inline-block;
     line-height: 48px;
 }
@@ -481,7 +511,7 @@ body {
     padding: 24px;
     background: linear-gradient(145deg, #dcebe6 0%, #f4f7f6 55%, #d6e5e2 100%);
     color: var(--campster-text);
-    font-family: 'Gothic A1', Arial, sans-serif;
+    font-family: 'Freesentation', 'Malgun Gothic', sans-serif;
 }
 
 .chat_window {
@@ -933,5 +963,322 @@ body {
 
     .messages {
         height: calc(100% - 218px);
+    }
+}
+
+/* Readability and visual polish */
+.top_menu {
+    min-height: 88px;
+    padding: 20px 22px 16px;
+}
+
+.top_menu .title {
+    font-size: 25px;
+    font-weight: 700;
+    line-height: 1.1;
+}
+
+.top_menu .subtitle {
+    margin-top: 6px;
+    font-size: 13px;
+    line-height: 1.35;
+}
+
+.demo_badge {
+    padding: 7px 10px;
+    font-size: 10px;
+    font-weight: 600;
+}
+
+.messages {
+    height: calc(100% - 228px);
+    padding: 22px 18px 32px;
+    background: #f3f7f6;
+}
+
+.messages .message {
+    width: 100%;
+    display: flex;
+    align-items: flex-end;
+    gap: 10px;
+    margin: 0 0 18px;
+    clear: both;
+}
+
+.messages .message.right {
+    justify-content: flex-end;
+}
+
+.messages .message .avatar {
+    flex: 0 0 46px;
+    width: 46px;
+    height: 46px;
+    margin: 0;
+    background-size: cover;
+    background-position: center;
+}
+
+.messages .message.right .avatar {
+    display: none;
+}
+
+.messages .message .text_wrapper,
+.messages .message.left .text_wrapper,
+.messages .message.right .text_wrapper {
+    width: auto;
+    min-width: 0;
+    max-width: calc(100% - 66px);
+    margin: 0;
+    padding: 14px 16px;
+    float: none;
+    border-radius: 18px;
+    box-shadow: 0 5px 16px rgba(39, 76, 71, 0.08);
+}
+
+.messages .message.left .text_wrapper {
+    border: 1px solid #d9e7e3;
+    border-bottom-left-radius: 6px;
+    background: #ffffff;
+}
+
+.messages .message.right .text_wrapper {
+    max-width: 82%;
+    border: 0;
+    border-bottom-right-radius: 6px;
+    background: var(--campster-primary);
+    box-shadow: 0 6px 18px rgba(40, 122, 117, 0.2);
+}
+
+.messages .message .text_wrapper::before,
+.messages .message .text_wrapper::after {
+    display: none;
+}
+
+.messages .message .text_wrapper .text,
+.messages .message.left .text,
+.messages .message.right .text {
+    color: var(--campster-text);
+    font-size: 15px;
+    font-weight: 500;
+    line-height: 1.62;
+    text-align: left;
+    word-break: keep-all;
+    overflow-wrap: anywhere;
+}
+
+.messages .message.right .text {
+    color: #ffffff;
+}
+
+.messages button.region,
+.messages button.theme,
+.messages button.equipment {
+    width: 100%;
+    min-height: 46px;
+    margin: 5px 0;
+    padding: 10px 14px;
+    border: 1px solid #c8ddd7;
+    border-radius: 12px;
+    background: #f8fbfa;
+    color: #173f3b;
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 1.35;
+    text-align: left;
+}
+
+.messages button.region:hover,
+.messages button.theme:hover,
+.messages button.equipment:hover {
+    border-color: var(--campster-primary);
+    background: #eaf4f1;
+    color: var(--campster-primary);
+}
+
+.messages button.selectequipment {
+    min-height: 38px;
+    margin: 4px 3px 4px 0;
+    padding: 8px 11px;
+    border-radius: 10px;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.boxes {
+    font-size: 14px;
+    line-height: 1.8;
+}
+
+.boxes label {
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.demo_response > span {
+    padding: 4px 7px;
+    font-size: 10px;
+}
+
+.demo_response > strong {
+    font-size: 15px;
+}
+
+.demo_response > p {
+    font-size: 14px;
+}
+
+.demo_response > small {
+    font-size: 12px;
+}
+
+.bottom_wrapper {
+    padding: 13px 16px 0;
+}
+
+.bottom_wrapper .message_input_wrapper {
+    height: 50px;
+    border-radius: 14px;
+}
+
+.bottom_wrapper .message_input_wrapper .message_input {
+    font-size: 16px;
+    font-weight: 400;
+    border: 0;
+    outline: none;
+}
+
+.bottom_wrapper .send_message {
+    flex-basis: 54px;
+    width: 54px;
+    height: 50px;
+    border-radius: 14px;
+}
+
+.send_icon {
+    line-height: 50px;
+    font-size: 20px;
+}
+
+.tabnav li a {
+    gap: 4px;
+    font-size: 20px;
+}
+
+.tabnav li a span {
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.home_content {
+    padding: 26px 26px 22px;
+}
+
+.home_content img {
+    width: min(100%, 330px);
+    border-radius: 22px;
+    box-shadow: 0 12px 34px rgba(44, 87, 81, 0.12);
+}
+
+.primary_link {
+    min-height: 50px;
+    margin-top: 20px;
+    padding: 0 24px;
+    border-radius: 14px;
+    font-size: 15px;
+    font-weight: 600;
+}
+
+.community_content {
+    padding: 24px 20px 28px;
+}
+
+.community_content .eyebrow {
+    margin-bottom: 7px;
+    font-size: 11px;
+}
+
+.community_content h2 {
+    font-size: 26px;
+    line-height: 1.25;
+}
+
+.write_button {
+    min-width: 68px;
+    height: 38px;
+    font-size: 13px;
+}
+
+.community_categories {
+    gap: 8px;
+    margin-top: 20px;
+    margin-bottom: 18px;
+}
+
+.category_chip {
+    height: 36px;
+    padding: 0 15px;
+    font-size: 13px;
+}
+
+.post_list {
+    gap: 14px;
+}
+
+.post_card {
+    padding: 18px;
+    border-radius: 18px;
+}
+
+.post_meta,
+.post_stats {
+    font-size: 11px;
+}
+
+.post_category {
+    padding: 5px 8px;
+    font-size: 11px;
+}
+
+.post_card h3 {
+    margin: 13px 0 9px;
+    font-size: 17px;
+    line-height: 1.45;
+}
+
+.post_card > p {
+    margin-bottom: 15px;
+    font-size: 13px;
+    line-height: 1.65;
+}
+
+.post_stats strong {
+    font-size: 15px;
+}
+
+.prototype_note {
+    margin-top: 18px;
+    font-size: 11px;
+    line-height: 1.6;
+}
+
+@media (max-width: 380px) {
+    .top_menu {
+        padding-inline: 18px;
+    }
+
+    .top_menu .title {
+        font-size: 23px;
+    }
+
+    .demo_badge {
+        font-size: 9px;
+    }
+
+    .messages {
+        padding-inline: 14px;
+    }
+
+    .messages .message .text_wrapper .text {
+        font-size: 14px;
     }
 }
