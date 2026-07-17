@@ -1,5 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@700&family=Kanit&display=swap');
-@import url('https://fonts.googleapis.com/css2family=Gothic+A1:wght@300&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Gothic+A1:wght@300;500;700&display=swap');
 * {
     box-sizing: border-box;
     font-weight: bold;
@@ -464,3 +464,311 @@ ul,li {list-style:none;}
 .tabnav li a:hover,
 .tabnav li a.active{background:#3b8c87; color:#ffffff; }
 .tabcontent{padding: 20px; height:244px; border:1px solid #ddd; border-top:none;}
+
+/* Portfolio presentation: preserve the original UI while making it responsive. */
+:root {
+    --campster-primary: #287a75;
+    --campster-primary-soft: #b2d7c1;
+    --campster-surface: #ffffff;
+    --campster-background: #edf3f1;
+    --campster-text: #172523;
+    --campster-muted: #657572;
+}
+
+body {
+    margin: 0;
+    min-height: 100svh;
+    padding: 24px;
+    background: linear-gradient(145deg, #dcebe6 0%, #f4f7f6 55%, #d6e5e2 100%);
+    color: var(--campster-text);
+    font-family: 'Gothic A1', Arial, sans-serif;
+}
+
+.chat_window {
+    position: relative;
+    inset: auto;
+    transform: none;
+    width: min(100%, 460px);
+    height: min(780px, calc(100svh - 48px));
+    min-height: 620px;
+    border: 1px solid rgba(40, 122, 117, 0.12);
+    border-radius: 24px;
+    box-shadow: 0 24px 70px rgba(35, 75, 70, 0.2);
+    background: #f7faf9;
+}
+
+.top_menu {
+    min-height: 82px;
+    padding: 18px 20px 14px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    box-shadow: 0 1px 0 rgba(34, 72, 68, 0.08);
+}
+
+.top_menu .title {
+    margin: 0;
+    text-align: left;
+    color: var(--campster-primary);
+    font-size: 22px;
+    letter-spacing: 0.04em;
+}
+
+.top_menu .subtitle {
+    margin: 3px 0 0;
+    color: var(--campster-muted);
+    font-size: 11px;
+    font-weight: 500;
+}
+
+.demo_badge {
+    padding: 6px 8px;
+    border-radius: 999px;
+    background: #e8f3ef;
+    color: var(--campster-primary);
+    font-size: 9px;
+    letter-spacing: 0.04em;
+}
+
+.messages {
+    height: calc(100% - 222px);
+    padding: 20px 14px 28px;
+    overflow-x: hidden;
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: #bdd3ce transparent;
+}
+
+.messages .message {
+    margin-bottom: 12px;
+}
+
+.messages .message .text_wrapper .text {
+    font-size: 13px;
+    line-height: 1.55;
+}
+
+.bottom_wrapper {
+    padding: 14px 16px 0;
+    border-top: 1px solid #e1ebe8;
+}
+
+.composer {
+    display: flex;
+    gap: 8px;
+}
+
+.bottom_wrapper .message_input_wrapper {
+    flex: 1;
+    width: auto;
+    height: 46px;
+    padding: 0 14px;
+    border-color: #c9d8d5;
+    background: #f9fbfa;
+}
+
+.bottom_wrapper .message_input_wrapper:focus-within {
+    border-color: var(--campster-primary);
+    box-shadow: 0 0 0 3px rgba(40, 122, 117, 0.12);
+}
+
+.bottom_wrapper .message_input_wrapper .message_input {
+    position: static;
+    width: 100%;
+    background: transparent;
+    color: var(--campster-text);
+    font-weight: 500;
+}
+
+.bottom_wrapper .send_message {
+    flex: 0 0 50px;
+    width: 50px;
+    height: 46px;
+    float: none;
+    border: 0;
+    background: var(--campster-primary);
+    color: white;
+}
+
+.bottom_wrapper .send_message:hover,
+.bottom_wrapper .send_message:focus-visible {
+    background: #1f625e;
+}
+
+.send_icon {
+    display: inline-block;
+    line-height: 46px;
+    font-size: 18px;
+    transform: rotate(-18deg);
+}
+
+.tab {
+    float: none;
+    height: 64px;
+    margin-top: 10px;
+}
+
+.tabnav {
+    width: 100%;
+    height: 100%;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+}
+
+.tabnav li {
+    display: block;
+    height: 100%;
+    border: 0;
+}
+
+.tabnav li a {
+    height: 100%;
+    padding: 8px 4px 6px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 2px;
+    color: #73827f;
+    background: transparent;
+    line-height: 1;
+    font-size: 17px;
+    border-radius: 12px 12px 0 0;
+}
+
+.tabnav li a span {
+    font-size: 10px;
+    font-weight: 500;
+}
+
+.tabnav li a:hover,
+.tabnav li a.active {
+    color: var(--campster-primary);
+    background: #edf6f3;
+}
+
+.sr_only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+.content_page {
+    display: flex;
+    flex-direction: column;
+}
+
+.home_content,
+.community_content {
+    flex: 1;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    text-align: center;
+}
+
+.home_content img {
+    width: min(100%, 350px);
+    max-height: calc(100% - 66px);
+    object-fit: contain;
+}
+
+.primary_link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 44px;
+    margin-top: 18px;
+    padding: 0 22px;
+    border-radius: 12px;
+    background: var(--campster-primary);
+    color: white;
+    font-size: 13px;
+    text-decoration: none;
+}
+
+.primary_link:hover,
+.primary_link:focus-visible {
+    background: #1f625e;
+    color: white;
+    text-decoration: none;
+}
+
+.community_content {
+    max-width: 360px;
+    margin: 0 auto;
+}
+
+.community_icon {
+    width: 70px;
+    height: 70px;
+    display: grid;
+    place-items: center;
+    margin-bottom: 20px;
+    border-radius: 22px;
+    background: #e4f2ed;
+    color: var(--campster-primary);
+    font-size: 34px;
+}
+
+.community_content .eyebrow {
+    margin: 0 0 8px;
+    color: var(--campster-primary);
+    font-size: 9px;
+    letter-spacing: 0.12em;
+}
+
+.community_content h2 {
+    margin: 0 0 14px;
+    font-size: 24px;
+}
+
+.community_content > p:not(.eyebrow) {
+    margin: 0;
+    color: var(--campster-muted);
+    font-size: 13px;
+    font-weight: 500;
+    line-height: 1.7;
+}
+
+.community_content .scope_note {
+    margin-top: 8px !important;
+    font-size: 11px !important;
+}
+
+.page_nav {
+    flex: 0 0 74px;
+    margin: 0;
+    padding: 10px 16px 0;
+    border-top: 1px solid #e1ebe8;
+    background: white;
+}
+
+@media (max-width: 520px) {
+    body {
+        padding: 0;
+        background: #f7faf9;
+    }
+
+    .chat_window {
+        width: 100%;
+        height: 100svh;
+        min-height: 540px;
+        border: 0;
+        border-radius: 0;
+        box-shadow: none;
+    }
+
+    .messages {
+        height: calc(100% - 218px);
+    }
+}

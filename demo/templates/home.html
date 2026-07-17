@@ -1,66 +1,36 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ko">
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Camster Home</title>
-    <script src="https://kit.fontawesome.com/ff85a05e17.js" crossorigin="anonymous"></script>
-    <script type="text/javascript" src="../static/js/jquery.js"></script>
-    <script type="text/javascript" src="../static/js/bootstrap.js"></script>
-    <script type="text/javascript" src="../static/js/main.js"></script>
-
-    <link href="https://cdn.jsdelivr.net/npm/remixicon@2.5.0/fonts/remixicon.css" rel="stylesheet">
-    <link href="../static/css/bootstrap.css"  rel="stylesheet">
-    <link href="../static/css/main.css"  rel="stylesheet">
-
-    <script>
-        greet();
-        onClickAsEnter();
-    </script>
+    <meta name="description" content="캠핑 추천 서비스 CAMPSTER">
+    <title>CAMPSTER | 홈</title>
+    <link href="../static/css/bootstrap.css" rel="stylesheet">
+    <link href="../static/css/main.css" rel="stylesheet">
 </head>
-
 <body>
-<div class="chat_window">
-    <div class="top_menu"></div>
-    <img src="../static/images/campmeHome.png" width="100%"; height="100% - 70px">
-    <!--메시지 입력-->
-    <ul class="homeMain"></ul>
-    <div class="bottom_wrapper clearfix">
-    <!--
-        <div class="message_input_wrapper">
-            <input class="message_input"
-                   onkeyup="return onClickAsEnter(event)"
-                   placeholder="내용을 입력하세요."/>
+<main class="chat_window content_page" aria-label="CAMPSTER 홈">
+    <header class="top_menu">
+        <div>
+            <h1 class="title">CAMPSTER</h1>
+            <p class="subtitle">나에게 맞는 캠핑을 찾아보세요</p>
         </div>
+        <span class="demo_badge">HOME</span>
+    </header>
 
-        <div class="send_message"
-             id="send_message"
-             onclick="onSendButtonClicked()">
+    <section class="home_content">
+        <img src="../static/image/campmeHome.png" alt="당신의 캠핑 취향을 찾아주는 친구 CAMPSTER">
+        <a class="primary_link" href="index.html">캠핑 추천 시작하기</a>
+    </section>
 
-            <div class="sendicon"></div>
-            <div class="text"><i class="fa-solid fa-paper-plane fa-lg"></i></div>
-             
-        </div>
-
-        탭 메뉴 부분 index.html-->
-        <div class="tab">
-            <ul class="tabnav">
-                <li><a href="home.html" name="home" style="background:#3b8c87; color:#ffffff; "> <i class="fa-solid fa-house"></i></a> </li>
-                <li><a href="index.html" name="chat"> <i class="fa-solid fa-comments"></i></a></li>
-                <li><a href="community.html" name="community"><i class="fa-solid fa-users"></i> </a></li>
-            </ul>
-        </div>
-</div>
-
-<div class="message_template">
-    <li class="message">
-        <div class="avatar"></div>
-        <div class="text_wrapper">
-        <div class="text"></div>
-        </div>
-    </li>
-</div>
+    <nav class="page_nav tab" aria-label="주요 화면">
+        <ul class="tabnav">
+            <li><a href="home.html" class="active" aria-current="page">⌂<span>홈</span></a></li>
+            <li><a href="index.html">●<span>챗봇</span></a></li>
+            <li><a href="community.html">♧<span>커뮤니티</span></a></li>
+        </ul>
+    </nav>
+</main>
 </body>
 </html>

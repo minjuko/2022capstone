@@ -1,110 +1,85 @@
-# Kochat
-[![PyPI version](https://badge.fury.io/py/kochat.svg)](https://badge.fury.io/py/kochat)
-![GitHub](https://img.shields.io/github/license/gusdnd852/kochat)
+# CAMPSTER
 
-![introduction_kochat](https://user-images.githubusercontent.com/38183241/85958000-1b8ed080-b9cd-11ea-99d6-69b472f3e2ff.jpg)
-<br>
+캠핑장과 캠핑 장비를 추천하는 챗봇 서비스입니다. 2022년 학교 수업에서 6인 팀 프로젝트로 진행했으며, 한국어 챗봇 프레임워크 [KoChat](https://github.com/gusdnd852/kochat)을 기반으로 제작했습니다.
 
-![](https://user-images.githubusercontent.com/38183241/86410173-4347a680-bcf5-11ea-9261-e272ad21ed36.gif)
-<br><br>
+> 이 저장소는 당시 작업 이력을 보존하면서 포트폴리오 열람에 필요한 설명과 프론트엔드 코드를 정리한 버전입니다.
 
-- 챗봇 빌더는 성에 안차고, 자신만의 딥러닝 챗봇 애플리케이션을 만드시고 싶으신가요?
-- Kochat을 이용하면 손쉽게 자신만의 딥러닝 챗봇 애플리케이션을 빌드할 수 있습니다.
+## 주요 기능
 
-```python
-# 1. 데이터셋 객체 생성
-dataset = Dataset(ood=True)
+- 지역을 기준으로 캠핑장 추천
+- 원하는 분위기와 조건을 조합한 테마별 캠핑장 추천
+- 텐트, 침낭, 조명 등 품목별 캠핑 장비 추천
+- 버튼 선택과 텍스트 입력을 함께 사용하는 대화형 UI
+- 홈, 챗봇, 커뮤니티 화면을 이동하는 하단 내비게이션
 
-# 2. 임베딩 프로세서 생성
-emb = GensimEmbedder(model=embed.FastText())
+## 담당 역할
 
-# 3. 의도(Intent) 분류기 생성
-clf = DistanceClassifier(
-    model=intent.CNN(dataset.intent_dict),                  
-    loss=CenterLoss(dataset.intent_dict)                    
-)
+6인 팀에서 다른 팀원 1명과 함께 **챗봇 프론트엔드**를 담당했습니다.
 
-# 4. 개체명(Named Entity) 인식기 생성                                                     
-rcn = EntityRecognizer(
-    model=entity.LSTM(dataset.entity_dict),
-    loss=CRFLoss(dataset.entity_dict)
-)
+- HTML 기반 챗봇 화면 및 하단 내비게이션 구성
+- CSS를 활용한 채팅 메시지, 입력창, 선택 버튼 UI 구현
+- JavaScript와 jQuery를 활용한 메시지 출력 및 사용자 입력 처리
+- 지역·테마·장비 추천 흐름에 맞춘 선택형 인터랙션 구현
+- 백엔드 API 응답을 채팅 화면에 표시하는 프론트엔드 연동
 
-# 5. 딥러닝 챗봇 RESTful API 학습 & 빌드
-kochat = KochatApi(
-    dataset=dataset, 
-    embed_processor=(emb, True), 
-    intent_classifier=(clf, True),
-    entity_recognizer=(rcn, True), 
-    scenarios=[
-        weather, dust, travel, restaurant
-    ]
-)
+챗봇 모델과 자연어 처리, 서버 및 백엔드 API 구현은 담당하지 않았습니다.
 
-# 6. View 소스파일과 연결                                                                                                        
-@kochat.app.route('/')
-def index():
-    return render_template("index.html")
+### 기여 기록 안내
 
-# 7. 챗봇 애플리케이션 서버 가동                                                          
-if __name__ == '__main__':
-    kochat.app.template_folder = kochat.root_dir + 'templates'
-    kochat.app.static_folder = kochat.root_dir + 'static'
-    kochat.app.run(port=8080, host='0.0.0.0')
+프론트엔드 코드는 팀원과 함께 작성한 뒤 팀원 한 명의 GitHub 계정으로 일괄 업로드했습니다. 따라서 Git 커밋 작성자와 기여자 통계만으로 개인별 작업을 구분하기 어렵습니다. 위 담당 역할은 당시 제가 실제로 공동 작업한 범위만 기재했습니다.
+
+## 기술 구성
+
+| 구분 | 기술 |
+| --- | --- |
+| 담당 영역 | HTML, CSS, JavaScript, jQuery, Bootstrap |
+| 프로젝트 구성 | Python, Flask, KoChat |
+| 챗봇 처리 | KoChat 기반 의도 분류 및 개체명 인식 |
+
+`Python`, `Flask`, `KoChat`은 전체 프로젝트에서 사용한 기술이며, 제 담당 영역은 프론트엔드였습니다.
+
+## 프로젝트 구조
+
+```text
+demo/
+├── templates/          # 챗봇, 홈, 커뮤니티 화면
+├── static/
+│   ├── css/main.css    # 프로젝트 UI 스타일
+│   ├── js/main.js      # 채팅 및 선택형 인터랙션
+│   └── image/          # 화면 이미지 리소스
+├── application.py     # Flask 애플리케이션 진입점
+├── scenario.py        # 챗봇 시나리오 정의
+└── data/               # 의도·개체 학습 데이터
 ```
-<br><br>
 
-## Why Kochat?
-- 한국어를 지원하는 최초의 오픈소스 딥러닝 챗봇 프레임워크입니다. (빌더와는 다릅니다.)
-- 다양한 Pre built-in 모델과 Loss함수를 지원합니다. NLP를 잘 몰라도 챗봇을 만들 수 있습니다.
-- 자신만의 커스텀 모델, Loss함수를 적용할 수 있습니다. NLP 전문가에겐 더욱 유용합니다.
-- 챗봇에 필요한 데이터 전처리, 모델, 학습 파이프라인, RESTful API까지 모든 부분을 제공합니다.
-- 가격 등을 신경쓸 필요 없으며, 앞으로도 쭉 오픈소스 프로젝트로 제공할 예정입니다.
-- 아래와 같은 다양한 성능 평가 메트릭과 강력한 시각화 기능을 제공합니다.
+## 브랜치 기록
 
-![](https://user-images.githubusercontent.com/38183241/86397184-513dfd00-bcde-11ea-9540-aa56a24b6d9b.png)
+당시 기능별 브랜치에서 작업했으며 일부 작업은 기본 브랜치에 병합되지 않은 상태로 남았습니다.
 
-![](https://user-images.githubusercontent.com/38183241/86397411-b8f44800-bcde-11ea-8b66-22423c12584c.png)
+- `main`: KoChat 기반 초기 코드
+- `hm`: 검색 API 관련 작업
+- `sb`: 챗봇 프론트엔드 공동 작업
+- `song`: 별도 저장소 구조에서 진행한 통합 작업
+- `portfolio`: `sb`를 기준으로 만든 포트폴리오 정리본
 
-![](https://user-images.githubusercontent.com/38183241/86396855-b47b5f80-bcdd-11ea-9672-4adf0f0ed140.png)
+과거 커밋의 작성자와 날짜는 수정하지 않았으며, 포트폴리오를 위한 변경은 기존 작업과 구분하여 기록합니다.
 
-![](https://user-images.githubusercontent.com/38183241/86323429-c62a1c00-bc77-11ea-9caf-ede65f4cbc6c.png)
-<br><br><br>
+## 실행 관련 안내
 
-## Documentation
+이 프로젝트는 2022년 당시의 Python 라이브러리 버전과 외부 검색 API를 사용합니다. 현재 환경에서는 오래된 의존성, API 키 및 챗봇 학습 과정이 필요해 바로 실행되지 않을 수 있습니다.
 
-1. [Kochat이란?](https://github.com/gusdnd852/kochat/tree/master/docs/01_kochat_이란.md)
-2. [About Chatbot](https://github.com/gusdnd852/kochat/tree/master/docs/02_about_chatbot.md)
-3. [Getting Started](https://github.com/gusdnd852/kochat/tree/master/docs/03_getting_started.md)
-4. [Usage](https://github.com/gusdnd852/kochat/tree/master/docs/04_usage.md)
-5. [Visualization Support](https://github.com/gusdnd852/kochat/tree/master/docs/05_visualization_support.md)
-6. [Performance Issue](https://github.com/gusdnd852/kochat/tree/master/docs/06_performance_issue.md)
-7. [Demo](https://github.com/gusdnd852/kochat/tree/master/docs/07_demo.md)
+프론트엔드 화면은 `demo/templates/index.html`을 기준으로 확인할 수 있습니다. 전체 챗봇 기능을 실행하려면 `requirements.txt`의 의존성과 외부 API 설정을 별도로 준비해야 합니다.
 
+## 포트폴리오 정리 내역
 
-<br>
+2026년 포트폴리오 기록을 위해 다음 내용을 정리합니다.
 
-## Reference
-- [챗봇 분류 그림](https://towardsdatascience.com/chatbots-are-cool-a-framework-using-python-part-1-overview-7c69af7a7439)
-- [seq2seq 그림](https://mc.ai/implement-of-seq2seq-model/)
-- [Fallback Detection 그림](https://docs.smartly.ai/docs/intent-detection)
-- [데모 애플리케이션 템플릿](https://bootsnipp.com/snippets/ZlkBn)
-- 그 외의 그림 및 소스코드 : 본인 제작
-<br><br><br>
+- 프로젝트와 개인 역할을 설명하는 README 작성
+- 깨진 프론트엔드 리소스 경로와 문구 수정
+- HTML, CSS, JavaScript의 가독성과 화면 사용성 보완
 
-## License
-```
-Copyright 2020 Hyunwoong Ko.
+프로젝트의 핵심 기능과 과거 기여 기록은 유지합니다.
 
-Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
+## 기반 프로젝트 및 라이선스
 
-http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
-```
+이 프로젝트는 Hyunwoong Ko의 [KoChat](https://github.com/gusdnd852/kochat)을 기반으로 제작되었습니다. 기반 코드의 라이선스는 저장소의 [LICENSE](./LICENSE)를 따릅니다.

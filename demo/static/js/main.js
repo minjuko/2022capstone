@@ -6,6 +6,8 @@
 let userName = null;
 let state = 'SUCCESS';
 let selectedBUTTON = 0;
+const API_BASE_URL = window.CAMPSTER_API_URL || 'http://127.0.0.1:8080';
+const OFFLINE_MESSAGE = '현재는 프론트엔드 데모 모드입니다. 추천 결과를 불러오는 백엔드 서버가 연결되어 있지 않습니다.';
 
 // functions
 function Message(arg) {
@@ -355,7 +357,7 @@ function 장비선택(){
                         "<button class='selectequipment' onclick='침낭ㆍ매트();'>침낭ㆍ매트</button>" +
                         "<button class='selectequipment' onclick='퍼니처();'>퍼니처</button>" +
                     "<button class='selectequipment' onclick='라이팅();'>라이팅</button>" +
-                    "<button class='selectequipment' onclick='화로ㆍBBQ();' >화로 ㆍ BBQ</button>" +
+                    "<button class='selectequipment' onclick='화로();' >화로 ㆍ BBQ</button>" +
                     "<button class='selectequipment' onclick='키친();' >키친</button>" +
                     "<button class='selectequipment' onclick='계절용품();' >계절용품</button>" +
                     "<button class='selectequipment' onclick='스토리지();' >스토리지</button>" +
@@ -462,7 +464,7 @@ function 등산용품(){
 // 장비 서버에게 요청
 function FinEq(obj){    // obj 문자열로 바꾸고
     $.ajax({
-        url: "http://127.0.0.1.8080/selection1/"+ userName + '/' + obj,   
+        url: API_BASE_URL + '/selection1/' + encodeURIComponent(userName) + '/' + encodeURIComponent(obj),
         type: "GET",
         dataType: "json",
         success: function (data) {
@@ -478,7 +480,7 @@ function FinEq(obj){    // obj 문자열로 바꾸고
 
         error: function (request, status, error) {
             console.log(error);
-            return sendMessage('죄송합니다. 서버 연결에 실패했습니다.', 'left');
+            return sendMessage(OFFLINE_MESSAGE, 'left');
         }
     });
 }
@@ -498,7 +500,7 @@ function CheckNum(e){
 }
 
 function onClickAsEnter(e) {
-    if (e.keyCode === 13) {
+    if (e.key === 'Enter' && !e.isComposing) {
         onSendButtonClicked()
     }
 }
@@ -539,7 +541,7 @@ function selectNUM3() {
 
 function setUserName(username) {
     let selectNUM;
-    if (username != null && username.replace(" ", "" !== "")) {
+    if (username != null && username.trim() !== '') {
         setTimeout(function () {
             return sendMessage("반가워요 " + username + "님! <br> 아래 세 가지 기능 중 원하시는 기능을 선택해주세요 <i class='fa-regular fa-face-smile'></i>", 'left');
         }, 1000);
@@ -560,7 +562,7 @@ function setUserName(username) {
 
 function requestChat(messageText, url_pattern) {
     $.ajax({
-        url: "http://127.0.0.1.8080/" + url_pattern + '/' + userName + '/' + messageText,
+        url: API_BASE_URL + '/' + url_pattern + '/' + encodeURIComponent(userName) + '/' + encodeURIComponent(messageText),
         type: "GET",
         dataType: "json",
         success: function (data) {
@@ -577,8 +579,7 @@ function requestChat(messageText, url_pattern) {
 
         error: function (request, status, error) {
             console.log(error);
-
-            return sendMessage('죄송합니다. 서버 연결에 실패했습니다.', 'left');
+            return sendMessage(OFFLINE_MESSAGE, 'left');
         }
     });
 }
@@ -739,7 +740,10 @@ function sendSpecificMessage(arg){
 }
 
 function onSendButtonClicked() {    // 전송 버튼을 누르면
-    let messageText = getMessageText();
+    let messageText = getMessageText().trim();
+    if (messageText === '') {
+        return;
+    }
     sendMessage(messageText, 'right');
 
     if (userName == null) {
