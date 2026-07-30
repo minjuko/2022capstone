@@ -7,23 +7,22 @@
     <meta name="description" content="지역, 테마, 장비를 추천하는 캠핑 챗봇 CAMPSTER">
     <title>CAMPSTER | 캠핑 추천 챗봇</title>
 
-    <link href="../static/css/bootstrap.css" rel="stylesheet">
-    <link href="../static/css/main.css" rel="stylesheet">
+    <link href="../static/css/main.css?v=20260801" rel="stylesheet">
+    <link href="../static/css/chat-modern.css?v=20260801" rel="stylesheet">
 </head>
 
 <body>
-<main class="chat_window" aria-label="CAMPSTER 챗봇">
-    <header class="top_menu">
-        <div>
-            <h1 class="title">CAMPSTER</h1>
-            <p class="subtitle">나에게 맞는 캠핑을 찾아보세요</p>
-        </div>
-        <span class="demo_badge" title="백엔드 서버 없이 프론트엔드 화면을 확인하는 모드">FRONTEND DEMO</span>
-    </header>
+<main class="chat_window app_frame app_page chat_app" aria-label="CAMPSTER 챗봇">
+    <campster-header action="reset"></campster-header>
 
     <ul class="messages" aria-live="polite" aria-label="대화 내용"></ul>
 
     <section class="bottom_wrapper" aria-label="메시지 입력">
+        <div class="quick_prompts" id="quick-prompts" aria-label="추천 질문" hidden>
+            <button type="button" data-message="서울 근교 캠핑장을 추천해줘">서울 근교</button>
+            <button type="button" data-message="별이 잘 보이는 조용한 캠핑장">별 보기 좋은 곳</button>
+            <button type="button" data-message="초보자용 텐트를 추천해줘">입문용 텐트</button>
+        </div>
         <div class="composer">
             <label class="sr_only" for="message-input">메시지</label>
             <div class="message_input_wrapper">
@@ -32,22 +31,15 @@
                     class="message_input"
                     type="text"
                     autocomplete="off"
-                    onkeyup="return onClickAsEnter(event)"
-                    placeholder="메시지를 입력하세요"
+                    placeholder="사용할 닉네임을 입력해주세요"
                 >
             </div>
-            <button class="send_message" id="send_message" type="button" onclick="onSendButtonClicked()" aria-label="메시지 전송">
+            <button class="send_message" id="send_message" type="button" aria-label="메시지 전송">
                 <span class="send_icon" aria-hidden="true">➤</span>
             </button>
         </div>
 
-        <nav class="tab" aria-label="주요 화면">
-            <ul class="tabnav">
-                <li><a href="home.html" aria-label="홈">⌂<span>홈</span></a></li>
-                <li><a href="index.html" class="active" aria-current="page" aria-label="챗봇">●<span>챗봇</span></a></li>
-                <li><a href="community.html" aria-label="커뮤니티">♧<span>커뮤니티</span></a></li>
-            </ul>
-        </nav>
+        <campster-navigation active="chat"></campster-navigation>
     </section>
 </main>
 
@@ -60,14 +52,7 @@
     </li>
 </div>
 
-<script src="../static/js/jquery.js"></script>
-<script src="../static/js/bootstrap.js"></script>
-<script src="../static/js/main.js"></script>
-<script>
-    $(function () {
-        greet();
-        document.getElementById('message-input').focus();
-    });
-</script>
+<script src="../static/js/components.js?v=20260731"></script>
+<script src="../static/js/main.js?v=20260731"></script>
 </body>
 </html>

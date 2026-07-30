@@ -8,7 +8,7 @@ from kocrawl.dust import DustCrawler
 from kocrawl.weather import WeatherCrawler
 from kochat.app import Scenario
 from kocrawl.map import MapCrawler
-from equipment import EquipmentCrawler
+from demo.equipment import EquipmentCrawler
 
 equipment = Scenario(
     intent='equipment',

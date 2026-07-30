@@ -6,18 +6,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="CAMPSTER 커뮤니티 화면">
     <title>CAMPSTER | 커뮤니티</title>
-    <link href="../static/css/bootstrap.css" rel="stylesheet">
-    <link href="../static/css/main.css" rel="stylesheet">
+    <link href="../static/css/main.css?v=20260801" rel="stylesheet">
+    <link href="../static/css/chat-modern.css?v=20260801" rel="stylesheet">
 </head>
 <body>
-<main class="chat_window content_page" aria-label="CAMPSTER 커뮤니티">
-    <header class="top_menu">
-        <div>
-            <h1 class="title">CAMPSTER</h1>
-            <p class="subtitle">캠핑 경험을 나누는 공간</p>
-        </div>
-        <span class="demo_badge">COMMUNITY</span>
-    </header>
+<main class="chat_window app_frame content_page community_app" aria-label="CAMPSTER 커뮤니티">
+    <campster-header></campster-header>
 
     <section class="community_content">
         <div class="community_heading">
@@ -70,14 +64,9 @@
         <p class="prototype_note">화면 구성을 보여주기 위한 예시 콘텐츠이며 실제 게시판 기능은 제공하지 않습니다.</p>
     </section>
 
-    <nav class="page_nav tab" aria-label="주요 화면">
-        <ul class="tabnav">
-            <li><a href="home.html">⌂<span>홈</span></a></li>
-            <li><a href="index.html">●<span>챗봇</span></a></li>
-            <li><a href="community.html" class="active" aria-current="page">♧<span>커뮤니티</span></a></li>
-        </ul>
-    </nav>
+    <campster-navigation active="community"></campster-navigation>
 </main>
+<script src="../static/js/components.js?v=20260731"></script>
 <script>
     const categoryButtons = document.querySelectorAll('.category_chip');
     const postCards = document.querySelectorAll('.post_card');

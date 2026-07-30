@@ -1,155 +1,25 @@
-import os
-import sys
-import urllib.request
-import json
+"""캠핑 장비 추천 시나리오.
 
-from kocrawl.editor.base_editor import BaseEditor
-import re
+2026년 종료된 Naver 쇼핑 검색 API 대신, 외부 서비스에 의존하지 않는
+카테고리별 입문 장비 가이드를 제공합니다.
+"""
 
-from kocrawl.answerer.base_answerer import BaseAnswerer
-
-#EquipmentSearcher?먯꽌 ?ъ슜-------------------------------------------------------------
-
-client_id = ""
-client_secret = ""
-
-
-#--------------------------------------------------------------------------------------
-
-
-class EquipmentSearcher:
-
-    def __init__(self):
-        self.data_dict = {
-            # ?곗씠?곕? ?댁쓣 ?뺤뀛?덈━ 援ъ“瑜??뺤쓽?⑸땲??
-            'name': [], 'tel': [],
-            'context': [], 'category': [],
-            'address': [], 'thumUrl': []
-        }
-
-    def _make_query(self, category: str, brand: str) -> str:
-
-
-        #query = ' '.join([category, brand])
-        query = category
-        return query
-
-    def search_naver_shopping(self, location: str, travel: str):
-        query = self._make_query(location, travel)
-
-        encText = urllib.parse.quote(query)
-        url = "https://openapi.naver.com/v1/search/shop?display=5&query=" + encText  # JSON 寃곌낵
-        # url = "https://openapi.naver.com/v1/search/blog.xml?query=" + encText # XML 寃곌낵
-        request = urllib.request.Request(url)
-        request.add_header("X-Naver-Client-Id", client_id)
-        request.add_header("X-Naver-Client-Secret", client_secret)
-        response = urllib.request.urlopen(request)
-        rescode = response.getcode()
-
-        data_dict = [{}]
-        # 由ъ뒪??+ ?뺤뀛?덈━
-
-        if (rescode == 200):
-            response_body = response.read()
-            # print(response_body.decode('utf-8'))
-            json_data = json.loads(response_body.decode('utf-8'))
-
-            for i in range(5):
-                temp_dict = {"title": json_data["items"][i]["title"],
-                             "link": json_data["items"][i]["link"],
-                             "image": json_data["items"][i]["image"],
-                             "lprice": json_data["items"][i]["lprice"]}
-                data_dict.append(temp_dict)
-
-            #print(data_dict[1].values())
-            # print(response_body.decode('utf-8'))
-
-        else:
-            print("Error Code:" + rescode)
-
-        return data_dict
-
-
-
-class EquipmentEditor(BaseEditor):
-
-    def edit_map(self, location: str, place: str, result: dict) -> dict:
-        """
-        join_dict瑜??ъ슜?섏뿬 ?뺤뀛?덈━???덈뒗 string 諛곗뿴?ㅼ쓣
-        ?섎굹??string?쇰줈 join?⑸땲??
-
-        :param location: 吏??
-        :param place: ?μ냼
-        :param result: ?곗씠???뺤뀛?덈━
-        :return: ?섏젙???뺤뀛?덈━
-        """
-
-        for i in range(5):
-
-            result[i] = self.join_dict(result[i], "title")
-            result[i] = self.join_dict(result[i], "link")
-            result[i] = self.join_dict(result[i], "image")
-            result[i] = self.join_dict(result[i], 'lprice')
-
-            #if isinstance(result['context'], str):
-                #result['context'] = re.sub(' ', ', ', result['context'])
-
-        return result
-
-class EquipmentAnswerer():
-
-    def map_form(self, category: str, brand: str, result: list) -> str:
-        """
-        ?ы뻾吏 異쒕젰 ?щ㎎
-
-        :param location: 吏??
-        :param place: ?μ냼
-        :param result: ?곗씠???뺤뀛?덈━
-        :return: 異쒕젰 硫붿떆吏
-        """
-        msg5 = ""
-        for i in range(5):
-
-            result[i+1]['title'] = re.sub("<b>", "", result[i+1]['title'])
-            result[i + 1]['title'] = re.sub("</b>", "", result[i + 1]['title'])
-
-            msg = f"\'{category}\' 移댄뀒怨좊━??{i+1}踰덉㎏ 寃?됯껐怨쇱엯?덈떎.\n"
-            msg += f"{result[i+1]['title']} \n"
-            msg += f"{result[i+1]['lprice']}??\n"
-            msg += f"諛붾줈媛湲?: {result[i+1]['link']}\n"
-            msg += f"?ъ쭊蹂닿린 :{result[i+1]['image']}\n\n"
-            msg5 += msg
-
-        return msg5
+EQUIPMENT_GUIDES = {
+    "텐트": "초보자라면 설치가 간단한 2~3인용 돔 텐트를 추천합니다.",
+    "침낭": "봄부터 초가을까지는 쾌적 온도를 확인한 3계절 침낭이 적합합니다.",
+    "조명": "밝기 조절과 생활 방수를 지원하는 충전식 LED 랜턴을 추천합니다.",
+}
 
 
 class EquipmentCrawler:
+    """기존 KoChat 시나리오가 사용하는 장비 추천 인터페이스."""
 
-    def request(self, category: str, brand: str) -> str:
-        """
-        吏?꾨? ?щ·留곹빀?덈떎.
-        (try-catch濡??먮윭媛 ?섏? ?딅뒗 ?⑥닔)
+    def request(self, category: str, brand: str = "") -> str:
+        del brand
+        return EQUIPMENT_GUIDES.get(
+            category,
+            f"{category} 장비는 사용 계절, 수납 크기, 안전 인증을 우선 확인해 주세요.",
+        )
 
-        :param category: ?λ퉬??移댄뀒怨좊━
-        :param brand: 釉뚮옖??
-        :return: ?대떦 ?λ퉬
-        """
-
-        try:
-            return self.request_debug(category, brand)
-
-        except Exception:
-            return "?대떦 ?λ퉬???????놁뒿?덈떎."
-
-    def request_debug(self, category: str, brand: str) -> tuple:
-        result_dict = EquipmentSearcher().search_naver_shopping(category, brand)
-
-
-        #result = EquipmentEditor().edit_map(category, brand, result_dict)
-
-        result = EquipmentAnswerer().map_form(category, brand, result_dict)
-        #return result, result_dict
-        return result
-
-E = EquipmentCrawler()
-print(E.request_debug("?붾줈","1"))
+    def request_debug(self, category: str, brand: str = "") -> str:
+        return self.request(category, brand)
