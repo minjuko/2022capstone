@@ -4,6 +4,10 @@ saved/
 .vscode/
 .idea/
 *.iml
+
+# Temporary local reference used during portfolio restoration.
+# Remove the directory after comparison; never commit the original copy.
+teamproject-original/
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
@@ -96,6 +100,10 @@ celerybeat-schedule
 
 # Environments
 .env
+.env.*
+!.env.example
+*.pem
+*.key
 .venv
 env/
 venv/
