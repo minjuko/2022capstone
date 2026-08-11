@@ -24,7 +24,9 @@
 | 주요 기능 | 지역 기반 캠핑장 추천, 테마 기반 캠핑장 추천, 캠핑 장비 추천 |
 | 기반 기술 | KoChat, Flask, Python, JavaScript |
 | 당시 운영 | AWS 서버에서 KoChat 모델과 Flask API 실행 |
-| 현재 상태 | API 키 없이 실행 가능한 로컬 데모와 고캠핑 API 연동 구조 제공 |
+| 현재 상태 | 실제 AI 추론 없이 챗봇 UI 흐름을 확인하는 로컬 데모 제공 |
+
+2022년 실제 구현은 채팅 화면을 중심으로 구성했습니다. 현재 `portfolio` 브랜치는 당시 챗봇의 시각적 정체성과 대화 흐름을 바탕으로 가독성·반응형·접근성을 개선한 2026 포트폴리오 데모입니다. 실제 KoChat AI 추론은 현재 제공하지 않으며, 당시 동작은 위 시연 영상에서 확인할 수 있습니다.
 
 ## 담당 역할
 
@@ -63,27 +65,12 @@ API 응답을 단순 텍스트로 출력하는 데 그치지 않고, 현재 대�
 - 닉네임 입력 후에만 추천 기능을 노출해 대화 순서를 명확하게 구성
 - 챗봇·사용자 메시지의 색상과 정렬을 구분
 - 응답 대기 상태와 자동 스크롤을 적용해 대화 맥락 유지
-- 홈·챗봇·커뮤니티에 공통 헤더와 하단 내비게이션 적용
 - 모바일 화면과 데스크톱 미리보기에 대응하는 반응형 레이아웃 구현
 - 긴 추천 카드가 입력 영역에 가려지지 않도록 독립 스크롤 영역 구성
 
 ## 주요 화면
 
-최종 화면 캡처는 고캠핑 API 연결 검증 후 아래 경로에 추가할 예정입니다. 세 이미지는 동일한 모바일 해상도와 비율로 캡처합니다.
-
-### 홈
-
-서비스의 목적과 주요 기능을 소개하고 챗봇 시작 버튼을 제공합니다.
-
-<!--
-권장 파일: docs/images/screenshots/home.png
-권장 규격: 390 × 844px 이상, PNG
-<p align="center">
-  <img src="./docs/images/screenshots/home.png" width="300" alt="CAMPSTER 홈 화면">
-</p>
--->
-
-> 화면 캡처 추가 예정: `docs/images/screenshots/home.png`
+최종 챗봇 화면 캡처는 고캠핑 API 연결 검증 후 아래 경로에 추가할 예정입니다.
 
 ### 챗봇
 
@@ -99,31 +86,16 @@ API 응답을 단순 텍스트로 출력하는 데 그치지 않고, 현재 대�
 
 > 화면 캡처 추가 예정: `docs/images/screenshots/chat.png`
 
-### 커뮤니티
-
-캠핑 후기, 장비 거래, 캠핑장 추천 게시글을 카테고리별로 확인하는 프로토타입 화면입니다. 실제 게시글 저장 기능은 구현 범위에 포함하지 않았습니다.
-
-<!--
-권장 파일: docs/images/screenshots/community.png
-권장 규격: 390 × 844px 이상, PNG
-<p align="center">
-  <img src="./docs/images/screenshots/community.png" width="300" alt="CAMPSTER 커뮤니티 화면">
-</p>
--->
-
-> 화면 캡처 추가 예정: `docs/images/screenshots/community.png`
+2026년 정리 과정에서 만들었던 홈·커뮤니티 프로토타입은 프로젝트 핵심인 챗봇에 집중하기 위해 현재 실행 범위에서 제거했습니다. 커뮤니티는 향후 서비스 확장 아이디어이며 현재 구현 기능이 아닙니다.
 
 ## 화면 동작 흐름
 
 | 화면 | 사용자 동작 | 결과 |
 | --- | --- | --- |
-| 홈 | `챗봇과 추천 시작하기` 선택 | 챗봇 화면으로 이동 |
 | 챗봇 | 닉네임 입력 | 지역·취향·장비 추천 메뉴 표시 |
 | 지역 추천 | 지역 관련 문장 또는 추천 버튼 선택 | 조건에 가까운 캠핑장 카드 표시 |
 | 취향 추천 | 별, 바다, 노을 등 취향 입력 | 키워드와 일치하는 캠핑장 카드 표시 |
 | 장비 추천 | 텐트·침낭·조명 등 장비 입력 | 입문 장비와 선택 기준 표시 |
-| 커뮤니티 | 카테고리 선택 | 해당 카테고리의 예시 게시글만 표시 |
-| 공통 | 하단 내비게이션 선택 | 홈·챗봇·커뮤니티 이동 |
 
 ## 전체 아키텍처
 
@@ -233,6 +205,7 @@ flowchart LR
 - 전체 캠핑장 목록은 30분 동안 메모리에 캐시합니다.
 - 키 미설정, 네트워크 오류, 잘못된 응답은 안전한 폴백 코드로 변환합니다.
 - 실 API를 사용할 수 없으면 동일한 UI 구조의 예시 데이터로 자동 전환합니다.
+- 고캠핑 live API는 2026년 8월 11일 실제 연결을 검증했습니다. 당시 `totalCount` 3,084건이 한 페이지로 반환됐으며, API를 사용할 수 없는 경우의 fallback도 함께 확인했습니다.
 
 ## 기술 스택
 
@@ -272,11 +245,11 @@ API 키가 없으면 예시 데이터 모드로 실행되므로 지역·취향·
 │   ├── scenario.py             # 의도별 챗봇 시나리오
 │   ├── equipment.py            # 현재 로컬 장비 추천 가이드
 │   ├── data/                   # 의도·개체 학습 데이터
-│   ├── templates/              # 홈·챗봇·커뮤니티 화면
+│   ├── templates/              # 챗봇 화면
 │   └── static/
 │       ├── css/                # 공통·반응형 UI
 │       ├── js/main.js          # 대화 상태와 추천 결과 렌더링
-│       └── js/components.js    # 공통 헤더·하단 내비게이션
+│       └── js/components.js    # 챗봇 헤더
 ├── kochat/                     # KoChat 기반 챗봇 프레임워크
 ├── docs/legacy/                # 2022 외부 API 구현 기록
 ├── tests/                      # 로컬 API·장비 추천 테스트
@@ -288,15 +261,15 @@ API 키가 없으면 예시 데이터 모드로 실행되므로 지역·취향·
 
 | 구분 | 2022 팀 프로젝트 | 현재 리팩토링                       |
 | --- | --- |-------------------------------|
-| 챗봇 실행 | AWS의 KoChat·Flask 서버 | API 키 없이 실행 가능한 로컬 데모         |
+| 챗봇 실행 | AWS의 KoChat·Flask 서버 | 실제 AI 추론 없는 로컬 UI 데모           |
 | 캠핑장 데이터 | 당시 서버 시나리오와 외부 API | 고캠핑 API와 예시 데이터 폴백            |
 | 장비 검색 | Naver 쇼핑 검색 API | 서비스 독립적인 입문 장비 가이드            |
 | 프론트엔드 | jQuery·인라인 이벤트 중심 | Vanilla JS 이벤트와 상태 기반 렌더링     |
-| 공통 UI | 화면별 중복 구조 | Web Components 기반 공통 헤더·내비게이션 |
+| 화면 UI | 채팅 화면 중심 | Web Components 헤더와 반응형 채팅 화면 |
 | 반응형 | 모바일 시연 화면 중심 | 모바일·데스크톱 공통 프레임               |
 | 보안 | 과거 코드에 인증정보 포함 | 환경변수 전환 및 Git 이력에서 인증정보 제거    |
 
-Naver 쇼핑 API가 2026년 7월 31일부로 지원 종료될 예정이므로, 포트폴리오의 지속성을 위해 외부 데이터 연동을 고캠핑 API 기반으로 전환했습니다. 기존 Naver 쇼핑 API 구현은 인증정보를 제거한 뒤 [`docs/legacy/naver_shopping_api.py`](./docs/legacy/naver_shopping_api.py)에 기록용으로 보존했으며, 장비 추천은 외부 서비스에 의존하지 않는 입문 장비 가이드로 대체했습니다.
+Naver 쇼핑 검색 API는 2026년 7월 31일 지원 종료되었습니다. 기존 구현은 인증정보를 제거한 뒤 [`docs/legacy/naver_shopping_api.py`](./docs/legacy/naver_shopping_api.py)에 기록용으로 보존했으며, 현재 runtime에서는 import하지 않습니다. 장비 추천은 외부 서비스에 의존하지 않는 입문 장비 가이드로 대체했습니다.
 
 ## 테스트
 
@@ -310,6 +283,8 @@ python -m unittest discover -s tests -v
 - 지역 키워드 기반 캠핑장 정렬
 - API 키 미설정 처리
 - 외부 API 오류에서 인증정보가 노출되지 않는지 확인
+- 고캠핑 요청 endpoint·query parameter·timeout
+- `/api/campsites`의 live·fallback JSON 응답
 - 장비 카테고리별 가이드와 기본 응답
 
 ## 참고 및 라이선스
@@ -320,4 +295,3 @@ python -m unittest discover -s tests -v
 - 원 저작권·라이선스 고지는 소스 파일과 `LICENSE`에 유지했습니다.
 - 저장소 내 KoChat 문서: [프레임워크 소개](./docs/01_kochat_이란.md), [챗봇 동작 원리](./docs/02_about_chatbot.md), [API·모델 사용법](./docs/04_usage.md), [데모 애플리케이션](./docs/07_demo.md)
 - UI 폰트: [Freesentation](https://freesentation.blog/freesentation), [SIL OFL 1.1](./demo/static/fonts/LICENSE.md)
-- 하단 내비게이션 아이콘: [Lucide](https://lucide.dev/), [ISC License](./demo/static/icons/LICENSE.txt)

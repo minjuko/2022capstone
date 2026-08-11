@@ -7,13 +7,16 @@
     <meta name="description" content="지역, 테마, 장비를 추천하는 캠핑 챗봇 CAMPSTER">
     <title>CAMPSTER | 캠핑 추천 챗봇</title>
 
-    <link href="../static/css/main.css?v=20260801" rel="stylesheet">
-    <link href="../static/css/chat-modern.css?v=20260801" rel="stylesheet">
+    <link href="../static/css/main.css?v=20260811" rel="stylesheet">
+    <link href="../static/css/chat-modern.css?v=20260811e" rel="stylesheet">
 </head>
 
 <body>
 <main class="chat_window app_frame app_page chat_app" aria-label="CAMPSTER 챗봇">
-    <campster-header action="reset"></campster-header>
+    <campster-header
+        action="reset"
+        subtitle="포트폴리오용 데모이며 실제 KoChat AI 추론을 수행하지 않습니다."
+    ></campster-header>
 
     <ul class="messages" aria-live="polite" aria-label="대화 내용"></ul>
 
@@ -34,12 +37,13 @@
                     placeholder="사용할 닉네임을 입력해주세요"
                 >
             </div>
-            <button class="send_message" id="send_message" type="button" aria-label="메시지 전송">
-                <span class="send_icon" aria-hidden="true">➤</span>
+            <button class="send_message" id="send_message" type="button" aria-label="메시지 전송" disabled>
+                <svg class="send_icon" viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M21 3 10.5 13.5"></path>
+                    <path d="m21 3-6.7 18-3.8-7.5L3 9.7 21 3Z"></path>
+                </svg>
             </button>
         </div>
-
-        <campster-navigation active="chat"></campster-navigation>
     </section>
 </main>
 
@@ -52,7 +56,7 @@
     </li>
 </div>
 
-<script src="../static/js/components.js?v=20260731"></script>
-<script src="../static/js/main.js?v=20260731"></script>
+<script src="../static/js/components.js?v=20260811"></script>
+<script src="../static/js/main.js?v=20260811c"></script>
 </body>
 </html>

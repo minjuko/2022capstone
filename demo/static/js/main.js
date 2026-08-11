@@ -52,6 +52,10 @@ const resetButton = document.querySelector('#reset-chat');
 const quickPrompts = document.querySelector('#quick-prompts');
 const template = document.querySelector('.message_template .message');
 
+function syncSendButton() {
+    sendButton.disabled = !input.value.trim();
+}
+
 function scrollToLatest() {
     requestAnimationFrame(() => {
         messages.scrollTo({ top: messages.scrollHeight, behavior: 'smooth' });
@@ -128,21 +132,25 @@ function createCampCards(camps) {
         const card = document.createElement('article');
         card.className = 'result_card';
         const imageMarkup = camp.image
-            ? `<img class="result_image" src="${escapeAttribute(camp.image)}" alt="">`
+            ? `<img class="result_image" src="${escapeAttribute(camp.image)}" alt="${escapeAttribute(camp.name)} 전경">`
             : '';
         card.innerHTML = `
             <div class="result_visual tone-${index + 1}">
                 ${imageMarkup}
-                <span>${camp.accent}</span>
-                <strong>0${index + 1}</strong>
+                <span class="result_accent">${escapeHtml(camp.accent)}</span>
             </div>
             <div class="result_body">
-                <span class="result_distance">${camp.distance}</span>
-                <h3>${escapeHtml(camp.name)}</h3>
+                <div class="result_heading">
+                    <h3>${escapeHtml(camp.name)}</h3>
+                    <span class="result_rank">추천 ${index + 1}</span>
+                </div>
+                <span class="result_distance">${escapeHtml(camp.distance)}</span>
                 <p>${escapeHtml(camp.description)}</p>
                 <div class="result_tags">${camp.tags.map((tag) => `<span>#${escapeHtml(tag)}</span>`).join('')}</div>
             </div>
         `;
+        const image = card.querySelector('.result_image');
+        image?.addEventListener('error', () => image.remove());
         wrapper.append(card);
     });
 
@@ -236,6 +244,7 @@ function handleMessage(rawMessage) {
 
     appendMessage(message, 'right');
     input.value = '';
+    syncSendButton();
 
     if (state.step === 'name') {
         state.name = message.slice(0, 12);
@@ -254,6 +263,7 @@ function resetChat() {
     state.step = 'name';
     quickPrompts.hidden = true;
     input.placeholder = '사용할 닉네임을 입력해주세요';
+    syncSendButton();
     messages.replaceChildren();
     appendTyping(() => {
         appendMessage('안녕하세요! 취향에 맞는 캠핑장과 장비를 찾아드리는 캠스터예요.', 'left');
@@ -269,6 +279,7 @@ input.addEventListener('keydown', (event) => {
         handleMessage(input.value);
     }
 });
+input.addEventListener('input', syncSendButton);
 resetButton.addEventListener('click', resetChat);
 quickPrompts.addEventListener('click', (event) => {
     const button = event.target.closest('button[data-message]');

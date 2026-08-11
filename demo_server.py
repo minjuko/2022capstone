@@ -4,11 +4,12 @@ from __future__ import annotations
 
 import json
 import os
+import ssl
 import time
 from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 from urllib.error import HTTPError, URLError
-from urllib.parse import parse_qs, urlencode, urlparse
+from urllib.parse import parse_qs, unquote, urlencode, urlparse
 from urllib.request import Request, urlopen
 
 HOST = "127.0.0.1"
@@ -17,6 +18,31 @@ ROOT = Path(__file__).resolve().parent
 GO_CAMPING_URL = "https://apis.data.go.kr/B551011/GoCamping/basedList"
 CACHE_SECONDS = 60 * 30
 _camp_cache: tuple[float, list[dict]] = (0, [])
+API_SSL_CONTEXT = ssl.create_default_context()
+# The data.go.kr endpoint currently requires legacy-compatible TLS ciphers when
+# called by Python builds linked against OpenSSL 3.x. Certificate checks remain on.
+API_SSL_CONTEXT.set_ciphers("DEFAULT:@SECLEVEL=1")
+
+
+def _load_env_file(path: Path = ROOT / ".env") -> None:
+    """Load simple KEY=VALUE entries without replacing existing environment values."""
+    if not path.is_file():
+        return
+
+    for raw_line in path.read_text(encoding="utf-8").splitlines():
+        line = raw_line.strip()
+        if not line or line.startswith("#") or "=" not in line:
+            continue
+        name, value = line.split("=", 1)
+        name = name.strip()
+        value = value.strip()
+        if len(value) >= 2 and value[0] == value[-1] and value[0] in "\"'":
+            value = value[1:-1]
+        if name:
+            os.environ.setdefault(name, value)
+
+
+_load_env_file()
 
 
 def _fallback_reason(error: Exception) -> str:
@@ -109,7 +135,9 @@ def fetch_campsites(query: str) -> list[dict]:
         raise RuntimeError("GO_CAMPING_API_KEY가 설정되지 않았습니다.")
 
     params = {
-        "serviceKey": service_key,
+        # data.go.kr provides both encoded and decoded keys. Normalize first so
+        # urlencode below applies exactly one encoding pass in either case.
+        "serviceKey": unquote(service_key),
         "MobileOS": "ETC",
         "MobileApp": "CAMPSTER",
         "_type": "json",
@@ -122,7 +150,7 @@ def fetch_campsites(query: str) -> list[dict]:
             f"{GO_CAMPING_URL}?{urlencode(params)}",
             headers={"User-Agent": "CAMPSTER-Portfolio/1.0"},
         )
-        with urlopen(request, timeout=12) as response:
+        with urlopen(request, timeout=12, context=API_SSL_CONTEXT) as response:
             payload = json.loads(response.read().decode("utf-8"))
         cached_camps = [_normalize_camp(item) for item in _as_items(payload)]
         _camp_cache = (time.time(), cached_camps)

@@ -13,13 +13,20 @@
     --campster-text: #123332;
     --campster-muted: #657a78;
     --app-header-height: 92px;
-    --app-nav-height: 72px;
     --card-radius: 18px;
     --card-border: 1px solid #dce7e2;
     --card-shadow: 0 7px 20px rgba(27, 63, 52, .06);
 }
 
+html,
 body {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+}
+
+body {
+    min-height: 0;
     background:
         radial-gradient(circle at 18% 15%, rgba(136, 202, 198, .42), transparent 28rem),
         radial-gradient(circle at 85% 80%, rgba(218, 194, 151, .35), transparent 24rem),
@@ -47,8 +54,7 @@ body {
     flex: 0 0 auto;
 }
 
-campster-header,
-campster-navigation {
+campster-header {
     display: block;
 }
 
@@ -94,24 +100,6 @@ campster-header {
     line-height: 1.35;
 }
 
-.header_badge {
-    position: absolute;
-    top: 50%;
-    right: 20px;
-    transform: translateY(-50%);
-    display: grid;
-    place-items: center;
-    min-width: 42px;
-    height: 42px;
-    padding: 0 10px;
-    border: 1px solid #d5e4dd;
-    border-radius: 15px;
-    background: var(--forest-100);
-    color: var(--forest-800);
-    font-size: 9px;
-    font-weight: 700;
-    letter-spacing: .06em;
-}
 
 .header_action {
     position: absolute;
@@ -134,64 +122,6 @@ campster-header {
     border-color: var(--forest-600);
     background: var(--forest-100);
     outline: none;
-}
-
-.app_navigation {
-    height: var(--app-nav-height);
-    padding: 8px 14px 7px;
-    border-top: 1px solid #dceae8;
-    background: rgba(251, 252, 250, .98);
-}
-
-.app_navigation ul {
-    height: 100%;
-    margin: 0;
-    padding: 0;
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    list-style: none;
-}
-
-.app_navigation li {
-    min-width: 0;
-}
-
-.app_navigation a {
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 4px;
-    border-radius: 14px;
-    color: #89958f;
-    font-size: 11px;
-    font-weight: 600;
-    text-decoration: none;
-    transition: background-color .18s ease, color .18s ease;
-}
-
-.app_navigation a img {
-    width: 21px;
-    height: 21px;
-    opacity: .56;
-    transition: opacity .18s ease, transform .18s ease;
-}
-
-.app_navigation a:hover,
-.app_navigation a:focus-visible,
-.app_navigation a.active {
-    background: var(--forest-100);
-    color: var(--forest-800);
-    text-decoration: none;
-    outline: none;
-}
-
-.app_navigation a:hover img,
-.app_navigation a:focus-visible img,
-.app_navigation a.active img {
-    opacity: 1;
-    transform: translateY(-1px);
 }
 
 .top_menu {
@@ -234,31 +164,6 @@ campster-header {
     font-size: 12px;
 }
 
-.status_dot {
-    width: 7px;
-    height: 7px;
-    border-radius: 50%;
-    background: #43a77e;
-    box-shadow: 0 0 0 4px rgba(67, 167, 126, .12);
-}
-
-.reset_button {
-    width: 40px;
-    height: 40px;
-    border: 1px solid var(--line);
-    border-radius: 13px;
-    background: white;
-    color: var(--forest-800);
-    font-size: 20px;
-    cursor: pointer;
-}
-
-.reset_button:hover,
-.reset_button:focus-visible {
-    border-color: var(--forest-600);
-    background: var(--forest-100);
-    outline: none;
-}
 
 .messages {
     flex: 1 1 auto;
@@ -378,8 +283,8 @@ campster-header {
 
 .result_stack {
     display: grid;
-    gap: 12px;
-    width: min(310px, 68vw);
+    gap: 14px;
+    width: min(326px, 72vw);
     max-width: 100%;
     min-width: 0;
 }
@@ -390,25 +295,30 @@ campster-header {
 
 .result_card {
     overflow: hidden;
-    border: var(--card-border);
-    border-radius: var(--card-radius);
+    border: 1px solid #d8e5df;
+    border-radius: 20px;
     background: white;
-    box-shadow: var(--card-shadow);
+    box-shadow: 0 10px 26px rgba(26, 60, 49, .09);
 }
 
 .result_visual {
     position: relative;
-    height: 76px;
+    height: 132px;
     padding: 14px;
     display: flex;
     align-items: flex-end;
-    justify-content: space-between;
     color: white;
     overflow: hidden;
 }
 
-.result_visual > span,
-.result_visual > strong {
+.result_visual::after {
+    content: "";
+    position: absolute;
+    inset: 40% 0 0;
+    background: linear-gradient(to bottom, transparent, rgba(10, 30, 24, .46));
+}
+
+.result_visual > span {
     position: relative;
     z-index: 1;
 }
@@ -419,28 +329,29 @@ campster-header {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    filter: brightness(.58) saturate(.85);
+    filter: brightness(.82) saturate(.9);
 }
 
 .tone-1 { background: linear-gradient(120deg, #1f4b3e, #759b74); }
 .tone-2 { background: linear-gradient(120deg, #202a4d, #655f89); }
 .tone-3 { background: linear-gradient(120deg, #965b45, #e2ad6f); }
 
-.result_visual span {
+.result_accent {
+    z-index: 2 !important;
+    padding: 4px 7px;
+    border-radius: 999px;
+    border: 1px solid rgba(255, 255, 255, .42);
+    background: rgba(18, 51, 50, .76);
+    backdrop-filter: blur(5px);
     font-size: 9px;
+    font-weight: 700;
     letter-spacing: .14em;
 }
 
-.result_visual strong {
-    font-size: 26px;
-    opacity: .8;
-}
-
 .result_body {
-    padding: 13px;
+    padding: 16px 17px 17px;
 }
 
-.result_distance,
 .card_eyebrow {
     color: var(--forest-600);
     font-size: 9px;
@@ -448,33 +359,72 @@ campster-header {
     letter-spacing: .05em;
 }
 
+.result_heading {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 10px;
+}
+
 .result_body h3,
 .equipment_card h3 {
-    margin: 5px 0;
+    margin: 0;
     color: var(--forest-950);
-    font-size: 15px;
+    font-size: 17px;
+    line-height: 1.35;
+}
+
+.result_rank {
+    flex: 0 0 auto;
+    margin-top: 1px;
+    padding: 4px 7px;
+    border-radius: 999px;
+    background: var(--forest-100);
+    color: var(--forest-700);
+    font-size: 9px;
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+.result_distance {
+    display: block;
+    margin: 5px 0 12px;
+    color: #71827c;
+    font-size: 10px;
+    font-weight: 500;
+    line-height: 1.45;
+}
+
+.result_distance::before {
+    content: "\1F4CD";
+    margin-right: 3px;
+    font-size: 9px;
 }
 
 .result_body p,
 .equipment_card p {
+    margin: 0;
     color: var(--muted);
     font-size: 12px;
-    line-height: 1.5;
+    line-height: 1.65;
 }
 
 .result_tags {
     display: flex;
     flex-wrap: wrap;
     gap: 5px;
-    margin-top: 9px;
+    margin-top: 13px;
+    padding-top: 12px;
+    border-top: 1px solid #edf2ef;
 }
 
 .result_tags span {
-    padding: 4px 7px;
+    padding: 4px 8px;
     border-radius: 999px;
-    background: var(--forest-100);
-    color: var(--forest-800);
-    font-size: 9px;
+    background: #f0f6f3;
+    color: #42685b;
+    font-size: 10px;
+    font-weight: 600;
 }
 
 .demo_note,
@@ -502,12 +452,8 @@ campster-header {
     bottom: auto;
     width: auto;
     flex: 0 0 auto;
-    padding: 10px 16px 0;
+    padding: 14px 18px 18px;
     background: rgba(251, 252, 250, .96);
-}
-
-.bottom_wrapper campster-navigation {
-    margin: 7px -16px 0;
 }
 
 .quick_prompts {
@@ -545,16 +491,70 @@ campster-header {
 }
 
 .bottom_wrapper .message_input_wrapper {
-    height: 48px;
+    height: 56px;
+    padding-inline: 16px;
     border: 1px solid var(--line);
+    border-radius: 16px;
     background: white;
 }
 
 .bottom_wrapper .send_message {
-    height: 48px;
-    border: 1px solid var(--forest-600);
-    background: white;
-    color: var(--forest-600);
+    flex: 0 0 58px;
+    width: 58px;
+    height: 56px;
+    padding: 0;
+    display: grid;
+    place-items: center;
+    border: 1px solid transparent;
+    border-radius: 16px;
+    background: linear-gradient(145deg, #188b86, var(--forest-800));
+    color: white;
+    box-shadow: 0 8px 18px rgba(15, 98, 95, .24), inset 0 1px rgba(255, 255, 255, .2);
+    cursor: pointer;
+    transition: transform .16s ease, box-shadow .16s ease, background .16s ease;
+}
+
+.send_icon {
+    display: block;
+    width: 23px;
+    height: 23px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.9;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    transform: translate(1px, -1px);
+    transition: transform .16s ease;
+}
+
+.bottom_wrapper .send_message:hover:not(:disabled),
+.bottom_wrapper .send_message:focus-visible:not(:disabled) {
+    background: linear-gradient(145deg, #1b9690, #0c5956);
+    box-shadow: 0 10px 22px rgba(15, 98, 95, .32), inset 0 1px rgba(255, 255, 255, .24);
+    transform: translateY(-2px);
+}
+
+.bottom_wrapper .send_message:focus-visible {
+    outline: 3px solid rgba(20, 123, 120, .22);
+    outline-offset: 3px;
+}
+
+.bottom_wrapper .send_message:hover:not(:disabled) .send_icon,
+.bottom_wrapper .send_message:focus-visible:not(:disabled) .send_icon {
+    transform: translate(3px, -3px);
+}
+
+.bottom_wrapper .send_message:active:not(:disabled) {
+    box-shadow: 0 4px 10px rgba(15, 98, 95, .24);
+    transform: translateY(0) scale(.96);
+}
+
+.bottom_wrapper .send_message:disabled {
+    border-color: var(--line);
+    background: #edf3f1;
+    color: #9aacaa;
+    box-shadow: none;
+    cursor: not-allowed;
 }
 
 .tab {
@@ -586,310 +586,11 @@ campster-header {
     background: transparent;
 }
 
-/* Home app */
-.home_app {
-    background: var(--campster-background);
-}
-
-.home_app .home_content {
-    display: block;
-    min-height: 0;
-    padding: 18px 20px 22px;
-    overflow-y: auto;
-    text-align: left;
-}
-
-.home_hero {
-    position: relative;
-    min-height: 245px;
-    padding: 24px 22px;
-    display: flex;
-    overflow: hidden;
-    border-radius: 24px;
-    background:
-        radial-gradient(circle at 86% 18%, rgba(155, 226, 221, .32), transparent 32%),
-        linear-gradient(135deg, #095452 0%, #16827e 100%);
-    box-shadow: 0 15px 32px rgba(8, 78, 75, .2);
-    color: white;
-}
-
-.hero_copy {
-    position: relative;
-    z-index: 2;
-    width: 72%;
-}
-
-.hero_eyebrow {
-    color: #bfe5e2;
-    font-size: 9px;
-    font-weight: 700;
-    letter-spacing: .14em;
-}
-
-.hero_copy h2 {
-    margin: 11px 0 9px;
-    color: white;
-    font-size: 27px;
-    font-weight: 700;
-    line-height: 1.2;
-    letter-spacing: -.03em;
-}
-
-.hero_copy p {
-    max-width: 250px;
-    margin: 0;
-    color: rgba(255, 255, 255, .72);
-    font-size: 12px;
-    font-weight: 400;
-    line-height: 1.55;
-}
-
-.hero_cta {
-    width: fit-content;
-    min-height: 42px;
-    margin-top: 17px;
-    padding: 0 14px;
-    display: inline-flex;
-    align-items: center;
-    gap: 18px;
-    border-radius: 12px;
-    background: white;
-    color: var(--forest-950);
-    font-size: 12px;
-    font-weight: 700;
-    text-decoration: none;
-}
-
-.hero_cta:hover,
-.hero_cta:focus-visible {
-    background: #eaf5ef;
-    color: var(--forest-950);
-    text-decoration: none;
-    outline: none;
-}
-
-.hero_mascot {
-    position: absolute;
-    right: -10px;
-    bottom: 18px;
-    width: 132px;
-    height: 132px;
-    display: grid;
-    place-items: center;
-}
-
-.hero_glow {
-    position: absolute;
-    width: 110px;
-    height: 110px;
-    border-radius: 50%;
-    background: rgba(222, 239, 224, .15);
-    box-shadow: 0 0 0 17px rgba(222, 239, 224, .06);
-}
-
-.hero_mascot img {
-    position: relative;
-    width: 98px;
-    height: 98px;
-    border: 5px solid rgba(255, 255, 255, .8);
-    border-radius: 50%;
-    object-fit: cover;
-    box-shadow: 0 12px 25px rgba(9, 28, 22, .28);
-}
-
-.home_section_heading {
-    margin: 24px 2px 13px;
-    display: flex;
-    align-items: flex-end;
-    justify-content: space-between;
-}
-
-.home_section_heading span {
-    color: var(--forest-600);
-    font-size: 9px;
-    font-weight: 700;
-    letter-spacing: .13em;
-}
-
-.home_section_heading h2 {
-    margin: 5px 0 0;
-    color: var(--forest-950);
-    font-size: 19px;
-    font-weight: 700;
-}
-
-.quick_start_grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 9px;
-}
-
-.quick_start_card {
-    min-width: 0;
-    min-height: 126px;
-    padding: 14px 11px;
-    display: flex;
-    flex-direction: column;
-    border: var(--card-border);
-    border-radius: var(--card-radius);
-    background: white;
-    color: var(--forest-950);
-    box-shadow: var(--card-shadow);
-}
-
-.quick_card_icon {
-    display: grid;
-    place-items: center;
-    width: 34px;
-    height: 34px;
-    margin-bottom: 12px;
-    border-radius: 11px;
-    font-size: 17px;
-    font-weight: 700;
-}
-
-.quick_start_card.forest .quick_card_icon {
-    background: var(--forest-100);
-    color: var(--forest-600);
-}
-
-.quick_start_card.sunset .quick_card_icon {
-    background: #f9eadb;
-    color: #b16a37;
-}
-
-.quick_start_card.gear .quick_card_icon {
-    background: #e9e9f7;
-    color: #676aa2;
-}
-
-.quick_start_card strong {
-    font-size: 12px;
-    line-height: 1.35;
-    word-break: keep-all;
-}
-
-.quick_start_card small {
-    margin-top: 4px;
-    color: var(--muted);
-    font-size: 9px;
-    line-height: 1.4;
-    word-break: keep-all;
-}
-
-.demo_status {
-    min-height: 68px;
-    margin-top: 15px;
-    padding: 12px 13px;
-    display: flex;
-    align-items: center;
-    gap: 11px;
-    border: 1px solid #d3e8e5;
-    border-radius: 17px;
-    background: #e8f5f3;
-}
-
-.status_symbol {
-    flex: 0 0 36px;
-    width: 36px;
-    height: 36px;
-    display: grid;
-    place-items: center;
-    border-radius: 12px;
-    background: white;
-}
-
-.status_symbol span {
-    width: 9px;
-    height: 9px;
-    border-radius: 50%;
-    background: var(--forest-600);
-    box-shadow: 0 0 0 5px rgba(20, 123, 120, .14);
-}
-
-.demo_status div {
-    flex: 1;
-    min-width: 0;
-}
-
-.demo_status strong {
-    color: var(--forest-950);
-    font-size: 12px;
-}
-
-.demo_status p {
-    margin: 3px 0 0;
-    color: var(--muted);
-    font-size: 9px;
-}
-
-.status_chevron {
-    display: grid;
-    place-items: center;
-    width: 28px;
-    height: 28px;
-    border-radius: 9px;
-    color: var(--forest-800);
-    background: white;
-    font-size: 12px;
-    font-weight: 700;
-}
-
-.home_app > campster-navigation,
-.community_app > campster-navigation {
-    flex: 0 0 var(--app-nav-height);
-}
-
-.community_content {
-    background: var(--campster-background);
-}
-
-.post_card {
-    border: var(--card-border);
-    border-radius: var(--card-radius);
-    box-shadow: var(--card-shadow);
-}
-
-.post_card.featured {
-    border-color: #bcd9d1;
-}
-
-.category_chip {
-    border-color: #dce7e2;
-    background: white;
-}
-
 .equipment_card {
     min-width: min(280px, 65vw);
     border-radius: var(--card-radius);
 }
 
-@media (max-width: 380px) {
-    .home_app .home_content {
-        padding-inline: 14px;
-    }
-
-    .home_hero {
-        min-height: 232px;
-        padding-inline: 18px;
-    }
-
-    .hero_copy h2 {
-        font-size: 24px;
-    }
-
-    .hero_mascot {
-        right: -24px;
-    }
-
-    .quick_start_grid {
-        gap: 6px;
-    }
-
-    .quick_start_card {
-        padding-inline: 9px;
-    }
-}
 
 @media (max-width: 520px) {
     .chat_window {
@@ -903,6 +604,10 @@ campster-header {
         width: 100%;
         height: 100svh;
         min-height: 0;
+    }
+
+    .bottom_wrapper {
+        padding: 12px 16px max(16px, env(safe-area-inset-bottom));
     }
 
     .messages {
