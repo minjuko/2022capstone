@@ -261,11 +261,19 @@ campster-header {
 
 .typing {
     display: flex;
+    align-items: center;
     gap: 4px;
     padding: 3px 2px;
 }
 
-.typing span {
+.typing_label {
+    margin-right: 4px;
+    color: var(--muted);
+    font-size: 11px;
+    font-weight: 500;
+}
+
+.typing .typing_dot {
     width: 6px;
     height: 6px;
     border-radius: 50%;
@@ -273,8 +281,8 @@ campster-header {
     animation: typing 1s infinite ease-in-out;
 }
 
-.typing span:nth-child(2) { animation-delay: .15s; }
-.typing span:nth-child(3) { animation-delay: .3s; }
+.typing .typing_dot:nth-child(3) { animation-delay: .15s; }
+.typing .typing_dot:nth-child(4) { animation-delay: .3s; }
 
 @keyframes typing {
     0%, 60%, 100% { transform: translateY(0); opacity: .45; }

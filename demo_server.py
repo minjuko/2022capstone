@@ -119,8 +119,9 @@ def _rank_camps(camps: list[dict], query: str) -> list[dict]:
             for camp in ranked
             if any(token in camp["_search"] for token in tokens)
         ]
-        if matched:
-            ranked = matched
+        if not matched:
+            return []
+        ranked = matched
 
     return [
         {key: value for key, value in camp.items() if key != "_search"}

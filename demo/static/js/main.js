@@ -82,14 +82,14 @@ function appendMessage(content, side = 'left', options = {}) {
 function appendTyping(callback) {
     const typing = document.createElement('div');
     typing.className = 'typing';
-    typing.setAttribute('aria-label', '답변 작성 중');
-    typing.innerHTML = '<span></span><span></span><span></span>';
+    typing.setAttribute('aria-label', '데모 응답 준비 중');
+    typing.innerHTML = '<span class="typing_label">데모 응답 준비 중</span><span class="typing_dot"></span><span class="typing_dot"></span><span class="typing_dot"></span>';
     const message = appendMessage(typing, 'left', { node: true });
 
     window.setTimeout(() => {
         message.remove();
         callback();
-    }, 450);
+    }, 300);
 }
 
 function createActions(items) {
@@ -119,13 +119,15 @@ function showMainMenu() {
     appendMessage(content, 'left', { node: true });
 }
 
-function createCampCards(camps) {
+function createCampCards(camps, source) {
     const wrapper = document.createElement('div');
     wrapper.className = 'result_stack';
 
     const intro = document.createElement('p');
     intro.className = 'result_intro';
-    intro.textContent = '입력한 조건에 어울리는 캠핑장을 골라봤어요.';
+    intro.textContent = source === 'live'
+        ? '입력어와 관련된 캠핑장을 조회했어요.'
+        : '현재 외부 캠핑장 데이터를 불러올 수 없어 데모용 예시 결과를 보여드릴게요.';
     wrapper.append(intro);
 
     camps.forEach((camp, index) => {
@@ -142,7 +144,7 @@ function createCampCards(camps) {
             <div class="result_body">
                 <div class="result_heading">
                     <h3>${escapeHtml(camp.name)}</h3>
-                    <span class="result_rank">추천 ${index + 1}</span>
+                    <span class="result_rank">조회 결과 ${index + 1}</span>
                 </div>
                 <span class="result_distance">${escapeHtml(camp.distance)}</span>
                 <p>${escapeHtml(camp.description)}</p>
@@ -156,7 +158,7 @@ function createCampCards(camps) {
 
     const note = document.createElement('small');
     note.className = 'demo_note';
-    note.textContent = camps.some((camp) => camp.isLive)
+    note.textContent = source === 'live'
         ? '한국관광공사 고캠핑 API에서 조회한 정보입니다.'
         : '포트폴리오 데모용 예시 데이터입니다.';
     wrapper.append(note);
@@ -168,11 +170,11 @@ function createEquipmentCard(type) {
     const card = document.createElement('article');
     card.className = 'equipment_card';
     card.innerHTML = `
-        <span class="card_eyebrow">BEGINNER PICK</span>
+        <span class="card_eyebrow">DEMO GUIDE</span>
         <h3>${item.name}</h3>
         <p>${item.description}</p>
         <ul>${item.tips.map((tip) => `<li>${tip}</li>`).join('')}</ul>
-        <small>포트폴리오 데모용 예시 추천입니다.</small>
+        <small>실시간 상품 검색이 아닌 포트폴리오 데모용 캠핑 입문 장비 가이드입니다.</small>
     `;
     return card;
 }
@@ -206,7 +208,29 @@ async function requestLiveCamps(query) {
     });
     if (!response.ok) throw new Error('API proxy unavailable');
     const payload = await response.json();
-    return payload.source === 'live' ? payload.items.map(mapLiveCamp) : [];
+    return {
+        source: payload.source,
+        camps: payload.source === 'live' ? payload.items.map(mapLiveCamp) : []
+    };
+}
+
+function findDemoCamps(query) {
+    const normalized = query.replace(/\s/g, '').toLowerCase();
+    const searchableCamps = DEMO_CAMPS.filter((camp) => {
+        return [...camp.tags, camp.name]
+            .some((value) => normalized.includes(value.replace(/\s/g, '').toLowerCase()))
+            || normalized.includes('캠핑장')
+            || normalized.includes('캠핑');
+    });
+
+    if (!searchableCamps.length) return [];
+    if (normalized.includes('별') || normalized.includes('조용')) {
+        return [DEMO_CAMPS[1], DEMO_CAMPS[0]];
+    }
+    if (normalized.includes('바다') || normalized.includes('노을')) {
+        return [DEMO_CAMPS[2], DEMO_CAMPS[1]];
+    }
+    return searchableCamps;
 }
 
 async function answerQuery(query) {
@@ -221,21 +245,26 @@ async function answerQuery(query) {
     }
 
     let camps = [];
+    let source = 'fallback';
     try {
-        camps = await requestLiveCamps(query);
+        const result = await requestLiveCamps(query);
+        camps = result.camps;
+        source = result.source;
     } catch (error) {
         console.info('고캠핑 API를 사용할 수 없어 예시 데이터로 전환합니다.');
     }
 
     if (!camps.length) {
-        camps = DEMO_CAMPS;
-        if (normalized.includes('별') || normalized.includes('조용')) {
-            camps = [DEMO_CAMPS[1], DEMO_CAMPS[0]];
-        } else if (normalized.includes('바다') || normalized.includes('노을')) {
-            camps = [DEMO_CAMPS[2], DEMO_CAMPS[1]];
+        camps = findDemoCamps(query);
+        source = 'fallback';
+        if (!camps.length) {
+            appendTyping(() => {
+                appendMessage('입력어와 일치하는 캠핑장 결과를 찾지 못했어요. 지역이나 캠핑 취향을 다시 입력해주세요.', 'left');
+            });
+            return;
         }
     }
-    appendTyping(() => appendMessage(createCampCards(camps), 'left', { node: true }));
+    appendTyping(() => appendMessage(createCampCards(camps, source), 'left', { node: true }));
 }
 
 function handleMessage(rawMessage) {
