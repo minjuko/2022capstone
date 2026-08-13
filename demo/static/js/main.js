@@ -24,9 +24,12 @@ const DEMO_CAMPS = [
 
 const EQUIPMENT = {
     텐트: {
-        name: '2~3인용 돔 텐트',
-        description: '설치가 단순하고 부피가 작아 첫 캠핑 장비로 적합합니다.',
-        tips: ['내수압 1,500mm 이상', '알루미늄 폴', '전실 포함 여부 확인']
+        name: '클로스트네이처 백패킹 1인 텐트',
+        description: '백패킹에 사용할 수 있는 1인용 텐트입니다.',
+        tips: ['1인용', '백패킹', '입문 장비 예시'],
+        image: '/docs/images/tent_for_beginners.png',
+        price: '108,000원',
+        url: 'https://smartstore.naver.com/farming4you/products/7067012972'
     },
     침낭: {
         name: '3계절 사각 침낭',
@@ -141,8 +144,26 @@ function showMainMenu() {
                 });
             }
         },
-        { label: '취향으로 캠핑장 찾기', value: '별이 잘 보이는 조용한 캠핑장' },
-        { label: '캠핑 장비 추천받기', value: '초보자용 텐트를 추천해줘' }
+        {
+            label: '취향으로 캠핑장 찾기',
+            onSelect: () => {
+                appendTyping(() => {
+                    appendMessage('원하는 캠핑 취향을 입력해주세요. 예: 별이 잘 보이는 조용한 캠핑장', 'left');
+                    input.placeholder = '캠핑 취향을 입력해주세요';
+                    input.focus();
+                });
+            }
+        },
+        {
+            label: '캠핑 장비 추천받기',
+            onSelect: () => {
+                appendTyping(() => {
+                    appendMessage('필요한 캠핑 장비를 입력해주세요. 예: 초보자용 텐트', 'left');
+                    input.placeholder = '캠핑 장비를 입력해주세요';
+                    input.focus();
+                });
+            }
+        }
     ]));
     appendMessage(content, 'left', { node: true });
 }
@@ -201,13 +222,32 @@ function createEquipmentCard(type) {
     const item = EQUIPMENT[type];
     const card = document.createElement('article');
     card.className = 'equipment_card';
+    const imageMarkup = item.image
+        ? `<img class="equipment_image" src="${escapeAttribute(item.image)}" alt="${escapeAttribute(item.name)} 상품 이미지">`
+        : '';
+    const linkMarkup = item.url
+        ? `<a class="equipment_link" href="${escapeAttribute(item.url)}" target="_blank" rel="noopener noreferrer">상품 페이지 보기</a>`
+        : '';
     card.innerHTML = `
-        <span class="card_eyebrow">DEMO GUIDE</span>
-        <h3>${item.name}</h3>
-        <p>${item.description}</p>
-        <ul>${item.tips.map((tip) => `<li>${tip}</li>`).join('')}</ul>
-        <small>실시간 상품 검색이 아닌 포트폴리오 데모용 캠핑 입문 장비 가이드입니다.</small>
+        ${imageMarkup ? `
+            <div class="equipment_visual">
+                ${imageMarkup}
+                <span class="equipment_accent">EQUIPMENT</span>
+            </div>
+        ` : ''}
+        <div class="equipment_body">
+            <span class="card_eyebrow">입문용 텐트 예시</span>
+            <h3>${escapeHtml(item.name)}</h3>
+            ${item.price ? `<div class="equipment_price"><strong>${escapeHtml(item.price)}</strong></div>` : ''}
+            <p>${escapeHtml(item.description)}</p>
+            <div class="equipment_tags">${item.tips.map((tip) => `<span>#${escapeHtml(tip)}</span>`).join('')}</div>
+            ${linkMarkup}
+        </div>
     `;
+    const image = card.querySelector('.equipment_image');
+    image?.addEventListener('error', () => {
+        image.closest('.equipment_visual')?.remove();
+    }, { once: true });
     return card;
 }
 
