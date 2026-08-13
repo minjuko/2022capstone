@@ -62,6 +62,15 @@ function scrollToLatest() {
     });
 }
 
+function scrollToMessageStart(message) {
+    requestAnimationFrame(() => {
+        messages.scrollTo({
+            top: Math.max(0, message.offsetTop - 16),
+            behavior: 'smooth'
+        });
+    });
+}
+
 function appendMessage(content, side = 'left', options = {}) {
     const message = template.cloneNode(true);
     message.classList.add(side);
@@ -75,7 +84,11 @@ function appendMessage(content, side = 'left', options = {}) {
 
     messages.append(message);
     requestAnimationFrame(() => message.classList.add('appeared'));
-    scrollToLatest();
+    if (options.alignStart) {
+        scrollToMessageStart(message);
+    } else {
+        scrollToLatest();
+    }
     return message;
 }
 
@@ -96,11 +109,17 @@ function createActions(items) {
     const group = document.createElement('div');
     group.className = 'message_actions';
 
-    items.forEach(({ label, value }) => {
+    items.forEach(({ label, value, onSelect }) => {
         const button = document.createElement('button');
         button.type = 'button';
         button.textContent = label;
-        button.addEventListener('click', () => handleMessage(value || label));
+        button.addEventListener('click', () => {
+            if (onSelect) {
+                onSelect();
+                return;
+            }
+            handleMessage(value || label);
+        });
         group.append(button);
     });
     return group;
@@ -112,7 +131,16 @@ function showMainMenu() {
     greeting.textContent = `${state.name}님, 어떤 캠핑을 준비하고 계세요?`;
     content.append(greeting);
     content.append(createActions([
-        { label: '지역으로 캠핑장 찾기', value: '서울 근교 캠핑장을 추천해줘' },
+        {
+            label: '지역으로 캠핑장 찾기',
+            onSelect: () => {
+                appendTyping(() => {
+                    appendMessage('찾고 싶은 지역을 입력해주세요. 예: 강원도 캠핑장 추천', 'left');
+                    input.placeholder = '지역을 입력해주세요';
+                    input.focus();
+                });
+            }
+        },
         { label: '취향으로 캠핑장 찾기', value: '별이 잘 보이는 조용한 캠핑장' },
         { label: '캠핑 장비 추천받기', value: '초보자용 텐트를 추천해줘' }
     ]));
@@ -133,11 +161,12 @@ function createCampCards(camps, source) {
     camps.forEach((camp, index) => {
         const card = document.createElement('article');
         card.className = 'result_card';
-        const imageMarkup = camp.image
-            ? `<img class="result_image" src="${escapeAttribute(camp.image)}" alt="${escapeAttribute(camp.name)} 전경">`
+        const imageUrl = typeof camp.image === 'string' ? camp.image.trim() : '';
+        const imageMarkup = imageUrl
+            ? `<img class="result_image" src="${escapeAttribute(imageUrl)}" alt="${escapeAttribute(camp.name)} 전경">`
             : '';
         card.innerHTML = `
-            <div class="result_visual tone-${index + 1}">
+            <div class="result_visual tone-${index + 1}${imageUrl ? '' : ' no_image'}">
                 ${imageMarkup}
                 <span class="result_accent">${escapeHtml(camp.accent)}</span>
             </div>
@@ -152,7 +181,10 @@ function createCampCards(camps, source) {
             </div>
         `;
         const image = card.querySelector('.result_image');
-        image?.addEventListener('error', () => image.remove());
+        image?.addEventListener('error', () => {
+            image.closest('.result_visual')?.classList.add('no_image');
+            image.remove();
+        }, { once: true });
         wrapper.append(card);
     });
 
@@ -264,7 +296,10 @@ async function answerQuery(query) {
             return;
         }
     }
-    appendTyping(() => appendMessage(createCampCards(camps, source), 'left', { node: true }));
+    appendTyping(() => appendMessage(createCampCards(camps, source), 'left', {
+        node: true,
+        alignStart: true
+    }));
 }
 
 function handleMessage(rawMessage) {

@@ -331,6 +331,17 @@ campster-header {
     z-index: 1;
 }
 
+.result_visual.no_image {
+    height: auto;
+    padding: 14px 17px 0;
+    background: white;
+    overflow: visible;
+}
+
+.result_visual.no_image::after {
+    display: none;
+}
+
 .result_image {
     position: absolute;
     inset: 0;
