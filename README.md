@@ -29,14 +29,31 @@
 
 <br>
 
+## 서비스 화면
+
+아래 화면은 2022 CAMPSTER의 기능과 대화 흐름을 바탕으로, 포트폴리오 정리 과정에서 Presentation을 개선한 UI입니다.
+
+<table>
+  <tr>
+    <th>대화 시작</th>
+    <th>지역 기반 캠핑장 탐색</th>
+    <th>취향 기반 캠핑장 탐색</th>
+    <th>캠핑 장비 탐색</th>
+  </tr>
+  <tr>
+    <td><img src="./docs/images/readme/01-username.png" alt="CAMPSTER 대화 시작 화면"></td>
+    <td><img src="./docs/images/readme/02-지역기반2.png" alt="지역 기반 캠핑장 탐색 화면"></td>
+    <td><img src="./docs/images/readme/03-취향기반2.png" alt="취향 기반 캠핑장 탐색 화면"></td>
+    <td><img src="./docs/images/readme/04-장비추천.png" alt="캠핑 장비 탐색 화면"></td>
+  </tr>
+</table>
+
+<br>
+
 ## 주요 기능
 
 CAMPSTER는 하나의 모바일 채팅 화면에서 사용자의 입력과 선택을 통해
 캠핑장과 캠핑 장비 탐색을 이어갈 수 있도록 구성했습니다.
-
-<p align="center">
-  <img src="..." width="260" alt="CAMPSTER 대화 시작 화면">
-</p>
 
 ### 1. 지역 기반 캠핑장 탐색
 
@@ -48,9 +65,6 @@ CAMPSTER는 하나의 모바일 채팅 화면에서 사용자의 입력과 선�
 - 조건에 맞는 캠핑장 탐색
 - 캠핑장 결과 및 상세정보 제공
 
-[지역 기반 추천 화면]
-
-
 ### 2. 취향 기반 캠핑장 탐색
 
 사용자가 원하는 캠핑 환경과 테마를 선택하고
@@ -59,9 +73,6 @@ CAMPSTER는 하나의 모바일 채팅 화면에서 사용자의 입력과 선�
 - 캠핑 테마 선택
 - 선택한 취향 조건을 기반으로 캠핑장 검색
 - 검색 결과를 채팅 화면의 Card 형태로 제공
-
-[취향 기반 추천 화면]
-
 
 ### 3. 캠핑 장비 탐색
 
@@ -72,7 +83,6 @@ CAMPSTER는 하나의 모바일 채팅 화면에서 사용자의 입력과 선�
 - Naver Shopping Search API를 통한 상품 탐색
 - 상품 이미지 및 기본 정보 제공
 
-[캠핑 장비 추천 화면]
 <br>
 
 ## 핵심 구현
