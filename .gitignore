@@ -108,6 +108,13 @@ celerybeat-schedule
 *.pem
 *.key
 *.ppk
+*.p12
+*.pfx
+.ssh/
+id_rsa
+id_rsa.*
+id_ed25519
+id_ed25519.*
 credentials*.json
 .venv
 env/
