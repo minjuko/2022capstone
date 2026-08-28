@@ -1,470 +1,535 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@700&family=Kanit&display=swap');
-@import url('https://fonts.googleapis.com/css2family=Gothic+A1:wght@300&display=swap');
-* {
-    box-sizing: border-box;
-    font-weight: bold;
+:root {
+    --campster-950: #12332f;
+    --campster-800: #1f5751;
+    --campster-700: #2f7068;
+    --campster-500: #5fa69c;
+    --campster-200: #cbe4de;
+    --campster-100: #e8f3f0;
+    --campster-50: #f5faf8;
+    --surface: #ffffff;
+    --canvas: #e7efec;
+    --text: #18312e;
+    --muted: #6c7f7a;
+    --line: #d8e5e1;
+    --shadow: 0 24px 70px rgba(24, 54, 49, 0.18);
+}
+
+* { box-sizing: border-box; }
+
+html,
+body {
+    width: 100%;
+    min-height: 100%;
+    margin: 0;
 }
 
 body {
-    /* 전체 배경 */
-    background-color: #ffffff;
-    font-family: Arial, Helvetica, sans-serif;
-    background-color: rgb(218, 218, 218);
+    min-height: 100vh;
     display: grid;
     place-items: center;
-    min-height: 100vh;
+    padding: 24px;
+    background:
+        radial-gradient(circle at 18% 10%, rgba(95, 166, 156, 0.18), transparent 34%),
+        linear-gradient(145deg, #f4f8f6 0%, var(--canvas) 100%);
+    color: var(--text);
+    font-family: "Malgun Gothic", "Apple SD Gothic Neo", Arial, sans-serif;
+    font-weight: 400;
 }
 
-.chat_window { /*큰 창*/
-    position: absolute;
-    width: 100%;
-    max-width: 450px;
-    height: 750px;
-    border-radius: 10px;
-    left: 50%;
-    top: 50%;
-    transform: translateX(-50%) translateY(-50%);
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
-    background-color: #f8f8f8;
+button,
+input { font: inherit; }
+
+button,
+input[type="button"] { -webkit-tap-highlight-color: transparent; }
+
+.chat_window {
+    position: relative;
+    width: min(100%, 450px);
+    height: min(820px, calc(100vh - 48px));
+    min-height: 620px;
+    display: flex;
+    flex-direction: column;
     overflow: hidden;
+    border: 1px solid rgba(255, 255, 255, 0.9);
+    border-radius: 28px;
+    background: var(--campster-50);
+    box-shadow: var(--shadow);
 }
 
 .top_menu {
-    background-color: #fff;
-    width: 100%;
-    padding: 10px 0 7px;
-    box-shadow: 0 1px 30px rgba(0, 0, 0, 0.1);
-}
-
-
-
-.top_menu .title {
-    text-align: center;
-    color: #3b8c87 ;
-    font-size: 20px;
-    font-weight: 600;
-    font-family: 'Kanit', sans-serif;
-}
-
-.messages {
     position: relative;
-    list-style: none;
-    padding: 20px 10px 0 10px;
-    margin: 0;
-    height: 600px;
-    overflow: scroll;
-}
-.homeMain {
-    position: relative;
-    list-style: none;
-    padding: 20px 10px 0 10px;
-    margin: 0;
-    height: 650px;
-
-}
-.communityMain {
-    position: relative;
-    list-style: none;
-    padding: 20px 10px 0 10px;
-    margin: 0;
-    height: 650px;
-
-}
-
-.answer {
+    z-index: 2;
+    min-height: 78px;
     display: flex;
     align-items: center;
     justify-content: center;
-    columns: auto;
-    flex-direction: column;
-    background-color: darkseagreen;
-    margin:9px;
-    border-radius: 9px;
-    padding:6px;
+    padding: 16px 22px;
+    border-bottom: 1px solid var(--line);
+    background: rgba(255, 255, 255, 0.96);
 }
 
-.messages .message {
-    clear: both;
-    overflow: hidden;
-    margin-bottom: -10px;
-    transition: all 0.5s linear;
-    opacity: 0;
+.brand_mark {
+    width: 36px;
+    height: 36px;
+    display: grid;
+    place-items: center;
+    margin-right: 11px;
+    border-radius: 12px;
+    background: linear-gradient(145deg, var(--campster-500), var(--campster-800));
+    color: #fff;
+    font-size: 16px;
+    font-weight: 800;
+    box-shadow: 0 8px 18px rgba(31, 87, 81, 0.22);
 }
 
-.messages .message.left .avatar {
-     background-image : url("../images/campme2.png");
-    float: left;
+.brand_copy { line-height: 1.15; }
+
+.top_menu .title {
+    color: var(--campster-950);
+    font-size: 19px;
+    font-weight: 800;
+    letter-spacing: 0.08em;
 }
 
-/* 캠미가 보내는 메시지 창 */
-.messages .message.left .text_wrapper {
-    display: inline-block;
-    position : relative;
-    background-color: #B2D7C1;
-    margin-left: 30px;
-    margin: 15px;
-    width: 70%;
-    height: auto;
-    border-radius: 10px;
-}
-
-/*캠미가 보내는 메시지 창 - 말풍선모양
-.messages .message.left .text_wrapper::after, .messages .message.left .text_wrapper::before {
-    right: 100%;
-    border-right-color:#b2d7c1;
-}*/
-
-/* 캠핑 장비 버튼 */
-.selectequipment:hover {
-    color: #659177;
-    background-color: rgb(225, 225, 225);
-}
-
-button.selectequipment{
-    position: relative;
-    background-color: #e8f4e5;
-    border-width: medium;
-    border-color:rgb(255, 255, 255) ;
-    border-style: solid;
-    padding: 3px 3px;
-    border-radius: 4px;
-    text-decoration: none;
+.top_menu .subtitle {
+    margin-top: 4px;
+    color: var(--muted);
+    font-size: 10px;
     font-weight: 600;
-    transition: 0.25s;
-    margin-right: 6px;
-    margin-bottom: 6px;
-
+    letter-spacing: 0.04em;
 }
 
-.region:hover {
-    color: #659177;
-    background-color: rgb(225, 225, 225);
-}
-
-/* 지역 기반 버튼 */
-button.region{
+.messages,
+.homeMain,
+.communityMain {
     position: relative;
-    background-color: #f8f8f8;
-    border-width: medium;
-    border-color:rgb(255, 255, 255) ;
-    border-style: solid;
-    padding: 8px 15px;
-    border-radius: 10px;
-    text-decoration: none;
-    font-weight: 600;
-    transition: 0.25s;
-    margin-bottom: 6px;
+    flex: 1 1 auto;
+    min-height: 0;
+    margin: 0;
+    padding: 24px 18px 18px;
+    overflow-x: hidden;
+    overflow-y: auto;
+    list-style: none;
+    scrollbar-width: thin;
+    scrollbar-color: var(--campster-200) transparent;
 }
 
-.theme:hover {
-    color: #659177;
-    background-color: rgb(225, 225, 225);
+.messages::-webkit-scrollbar { width: 6px; }
+
+.messages::-webkit-scrollbar-thumb {
+    border-radius: 99px;
+    background: var(--campster-200);
 }
 
-/*테마 기반 버튼*/
-button.theme{
-    position: relative;
-    background-color: #f8f8f8;
-    border-width: medium;
-    border-color:rgb(255, 255, 255) ;
-    border-style: solid;
-    padding: 8px 15px;
-    border-radius: 10px;
-    text-decoration: none;
-    font-weight: 600;
-    transition: 0.25s;
-    margin-bottom: 6px;
-}
-
-.equipment:hover {
-    color: #659177;
-    background-color: rgb(225, 225, 225);
-}
-
-/* 캠핑 장비 버튼 */
-button.equipment{
-    position: relative;
-    background-color: #f8f8f8;
-    border-width: medium;
-    border-color:rgb(255, 255, 255) ;
-    border-style: solid;
-    padding: 8px 15px;
-    border-radius: 10px;
-    text-decoration: none;
-    font-weight: 600;
-    transition: 0.25s;
-    margin-bottom: 6px;
-}
-
-/* 체크박스 */
-.boxes{
-    position: relative;
-}
-
-input[type=checkbox] {
+.homeMain,
+.communityMain {
     display: none;
 }
 
-input[type="checkbox"] + label{
-    cursor: pointer;
-    padding-left:25px;
-    font-size: 12px;
-    font-weight: 600;
-}
-
-input[type=checkbox] + label:before {
-    content: "";
-    width: 15px;
-    height: 15px;
-    margin-right: 10px;
-    position: absolute;
-    left:0;
-    background-color: #f7f7f7;
-    border-radius: 5px;
-    box-shadow: inset 0px 1px 1px 0px rgba(0, 0, 0, .3), 0px 1px 0px 0px rgba(255, 255, 255, .8);
-}
-
-input[type=checkbox]:checked + label:before{
-    content: "✓";
-    text-shadow: 1px 1px 1px rgba(0, 0, 0, .2);
-    font-size: 10px;
-    font-weight:600;
-    color: #f8f8f8;
-    background:#2e7554;
-    text-align: center;
-}
-
-/* 선택 완료 버튼*/
-.check:hover{
-    color: #659177;
-    background-color: rgb(225, 225, 225);
-}
-
-button.check{
-    position: relative;
-    background-color: #f8f8f8;
-    border-width: medium;
-    border-color:rgb(255, 255, 255) ;
-    border-style: solid;
-    padding: 8px 10px;
-    border-radius: 10px;
-    text-decoration: none;
-    font-weight: 600;
-    transition: 0.25s;
-}
-
-.messages .message.left .text_wrapper::after  {
-    border-top:15px solid #B2D7C1;
-    border-left: 15px solid transparent;        /* 삼각형 크기? */
-    border-right: 0px solid transparent;
-    border-bottom: 0px solid transparent;
-    position:absolute;
-    top:10px;
-    left:-15px;
-    right: 100%;
-    /* border-right-color:#b2d7c1;*/
-}
-
-
-/* 캠미가 보내는 메시지 창 - 텍스트 */
-.messages .message.left .text {
-    color: black;
-    text-align: left;
-}
-
-/* 사용자 프로필 사진
-.messages .message.right .avatar {
-    background-color: #fdbf68;
-    float: right;
-}
-*/
-
-/* 사용자가 작성한 메시지 창*/
-.messages .message.right .text_wrapper {
-    display: inline-block;
-    position : relative;
-    background-color:rgb(255, 255, 255);
-    border: 3px solid;
-    border-color:#b2d7c1;
-    margin-right: 20px;
-    margin: 15px;
-    width: 70%;
-    height: auto;
-    float: right;
-    border-radius: 10px;
-}
-
-/*사용자가 작성한 메시지 창 - 말풍선 모양*/
-.messages .message.right .text_wrapper::after {
-    border-top:15px solid #B2D7C1;
-    border-left: 15px solid transparent;
-    border-right: 0px solid transparent;
-    border-bottom: 0px solid transparent;
-    position:absolute;
-    transform: scaleX(-1);
-    top:10px;
-    left: 100%;
-    right: 100px;
-    /* border-right-color:#b2d7c1;
-    border-left-color: #B2D7C1;*/
-}
-
-/*사용자가 작성한 메시지 창 - 텍스트 */
-.messages .message.right .text {
-    color: black;
-    text-align: right;
+.messages .message {
+    width: 100%;
+    display: flow-root;
+    clear: both;
+    margin-bottom: 14px;
+    opacity: 0;
+    transform: translateY(7px);
+    transition: opacity 0.25s ease, transform 0.25s ease;
 }
 
 .messages .message.appeared {
     opacity: 1;
+    transform: translateY(0);
 }
 
-/* 프로필 사진 */
 .messages .message .avatar {
-    width: 60px;
-    height: 60px;
-    border-radius: 50%;
+    width: 42px;
+    height: 42px;
     display: inline-block;
+    border: 3px solid rgba(255, 255, 255, 0.85);
+    border-radius: 15px;
+    background-position: center;
+    background-size: cover;
+    box-shadow: 0 5px 14px rgba(29, 68, 61, 0.12);
 }
 
-/* 메시지 창 글자수에 따른 길이 제어하는 부분*/
+.messages .message.left .avatar {
+    float: left;
+    background-image: url("../images/campme2.png");
+}
+
 .messages .message .text_wrapper {
-    display: inline-block;
-    padding: 15px;
-    border-radius: 6px;
-    width: calc(100% - 85px);
-    min-width: 100px;
     position: relative;
+    width: auto;
+    max-width: calc(100% - 58px);
+    min-width: 72px;
+    padding: 12px 14px;
+    border-radius: 17px;
 }
 
-
-.messages .message .text_wrapper::after, .messages .message .text_wrapper:before {
-    top: 18px;
-    border: solid transparent;
-    content: " ";
-    height: 0;
-    width: 0;
-    position: absolute;
-    pointer-events: none;
+.messages .message.left .text_wrapper {
+    float: left;
+    margin-left: 10px;
+    border: 1px solid #c2ddd6;
+    border-bottom-left-radius: 5px;
+    background: #dceee9;
+    box-shadow: 0 6px 18px rgba(39, 76, 71, 0.07);
 }
 
-.messages .message .text_wrapper::after {
-    border-width: 12px;
-    margin-top: 0px;
+.messages .message.right .text_wrapper {
+    float: right;
+    border: 1px solid #8fc1b9;
+    border-bottom-right-radius: 5px;
+    background: #fff;
+    box-shadow: 0 6px 18px rgba(39, 76, 71, 0.06);
 }
 
-.messages .message .text_wrapper::before {
-    border-width: 15px;
-    margin-top: -2px;
-}
+.messages .message .text_wrapper::before,
+.messages .message .text_wrapper::after { display: none; }
 
 .messages .message .text_wrapper .text {
+    color: var(--text);
+    font-size: 13px;
+    font-weight: 500;
+    line-height: 1.65;
+    overflow-wrap: anywhere;
+}
+
+.messages .message.left .text,
+.messages .message.right .text { text-align: left; }
+
+.selectBtns {
+    display: grid;
+    gap: 8px;
+    min-width: min(260px, 62vw);
+}
+
+.selectBtns br,
+.boxes br { display: none; }
+
+button.region,
+button.theme,
+button.equipment,
+button.selectequipment,
+button.check {
+    border: 1px solid #c5dcd6;
+    background: #fff;
+    color: var(--campster-800);
+    font-size: 12px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: border-color 0.16s ease, background 0.16s ease, color 0.16s ease, transform 0.16s ease;
+}
+
+button.region,
+button.theme,
+button.equipment {
+    width: 100%;
+    padding: 11px 13px;
+    border-radius: 12px;
+    text-align: left;
+}
+
+button.selectequipment,
+button.check {
+    margin: 0 5px 6px 0;
+    padding: 7px 10px;
+    border-radius: 999px;
+}
+
+button.region:hover,
+button.theme:hover,
+button.equipment:hover,
+button.selectequipment:hover,
+button.check:hover,
+button.region:focus-visible,
+button.theme:focus-visible,
+button.equipment:focus-visible,
+button.selectequipment:focus-visible,
+button.check:focus-visible {
+    border-color: var(--campster-500);
+    background: var(--campster-100);
+    color: var(--campster-950);
+    outline: none;
+    transform: translateY(-1px);
+}
+
+.boxes {
+    display: grid;
+    gap: 8px;
+}
+
+input[type="checkbox"] {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    opacity: 0;
+}
+
+input[type="checkbox"] + label {
+    position: relative;
+    display: block;
+    padding: 8px 10px 8px 34px;
+    border: 1px solid var(--line);
+    border-radius: 11px;
+    background: #fff;
     font-size: 12px;
     font-weight: 600;
-    font-family: 'Gothic A1', sans-serif;
+    cursor: pointer;
+}
+
+input[type="checkbox"] + label::before {
+    content: "";
+    position: absolute;
+    left: 10px;
+    top: 50%;
+    width: 15px;
+    height: 15px;
+    border: 1px solid #9dbbb4;
+    border-radius: 5px;
+    background: #fff;
+    transform: translateY(-50%);
+}
+
+input[type="checkbox"]:checked + label {
+    border-color: var(--campster-500);
+    background: var(--campster-100);
+}
+
+input[type="checkbox"]:checked + label::before {
+    content: "✓";
+    display: grid;
+    place-items: center;
+    border-color: var(--campster-700);
+    background: var(--campster-700);
+    color: #fff;
+    font-size: 10px;
+}
+
+.answer {
+    width: min(270px, 62vw);
+    display: grid;
+    gap: 9px;
+    overflow: hidden;
+    padding: 14px;
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    background: #fff;
+    box-shadow: 0 9px 22px rgba(27, 63, 56, 0.09);
+}
+
+.answer p {
+    margin: 0;
+    color: var(--muted);
+    font-size: 12px;
+    line-height: 1.5;
+}
+
+.answer p:first-child {
+    color: var(--campster-950);
+    font-size: 15px;
+    font-weight: 800;
+}
+
+.answer img {
+    width: 100% !important;
+    height: 150px !important;
+    border-radius: 12px;
+    object-fit: cover;
+    background: var(--campster-100);
+}
+
+.answer a {
+    color: var(--campster-700);
+    font-weight: 700;
+    text-underline-offset: 3px;
+}
+
+.answer input[type="button"] {
+    width: 100%;
+    margin-top: 2px !important;
+    padding: 9px 12px;
+    border: 1px solid var(--campster-500);
+    border-radius: 10px;
+    background: var(--campster-50);
+    color: var(--campster-800);
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.messages .message .text ul {
+    display: grid;
+    gap: 8px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.messages .message .text li {
+    padding-bottom: 7px;
+    border-bottom: 1px solid rgba(95, 145, 134, 0.2);
+}
+
+.messages .message .text li:last-child {
+    padding-bottom: 0;
+    border-bottom: 0;
 }
 
 .bottom_wrapper {
     position: relative;
+    flex: 0 0 auto;
     width: 100%;
-    background-color: #fff;
-    padding: 20px 20px;
-    position: absolute;
-    bottom: 0;
+    display: flex;
+    gap: 10px;
+    padding: 14px 16px 17px;
+    border-top: 1px solid var(--line);
+    background: rgba(255, 255, 255, 0.97);
 }
 
 .bottom_wrapper .message_input_wrapper {
-    display: inline-block;
-    height: 50px;
-    border-radius: 10px;
-    border: 1px solid #bcbdc0;
-    width: calc(100% - 80px);
     position: relative;
-    padding: 0 20px;
+    flex: 1 1 auto;
+    height: 52px;
+    padding: 0 16px;
+    border: 1px solid #cbded9;
+    border-radius: 15px;
+    background: #fff;
+    transition: border-color 0.16s ease, box-shadow 0.16s ease;
+}
+
+.bottom_wrapper .message_input_wrapper:focus-within {
+    border-color: var(--campster-500);
+    box-shadow: 0 0 0 3px rgba(95, 166, 156, 0.14);
 }
 
 .bottom_wrapper .message_input_wrapper .message_input {
-    border: none;
+    width: 100%;
     height: 100%;
-    box-sizing: border-box;
-    width: calc(100% - 40px);
-    position: absolute;
-    outline-width: 0;
-    color: gray;
+    padding: 0;
+    border: 0;
+    outline: 0;
+    background: transparent;
+    color: var(--text);
+    font-size: 14px;
 }
+
+.bottom_wrapper .message_input_wrapper .message_input::placeholder { color: #93a29e; }
 
 .bottom_wrapper .send_message {
-    width: 70px;
-    height: 50px;
-    display: inline-block;
-    border-radius: 10px;
-    background-color: #ffffff;
-    border: 2px solid #3b8c87;
-    color: #3b8c87;
+    flex: 0 0 56px;
+    width: 56px;
+    height: 52px;
+    display: grid;
+    place-items: center;
+    padding: 0;
+    border: 0;
+    border-radius: 15px;
+    background: linear-gradient(145deg, var(--campster-500), var(--campster-800));
+    color: #fff;
+    box-shadow: 0 8px 18px rgba(31, 87, 81, 0.24);
     cursor: pointer;
-    transition: all 0.2s linear;
-    text-align: center;
-    float: right;
+    transition: transform 0.16s ease, box-shadow 0.16s ease;
 }
 
-/*전송 아이콘 마우스 올릴 시*/
-.bottom_wrapper .send_message:hover {
-    color: #ffffff;
-    background-color: #3b8c87;
+.bottom_wrapper .send_message:hover,
+.bottom_wrapper .send_message:focus-visible {
+    outline: none;
+    box-shadow: 0 10px 22px rgba(31, 87, 81, 0.32);
+    transform: translateY(-2px);
 }
 
-/* 전송 아이콘 기본*/
-.bottom_wrapper .send_message .text {
-    font-size: 18px;
-    font-weight: 600px;
-    display: inline-block;
-    line-height: 48px;
+.bottom_wrapper .send_message .text { font-size: 0; }
+
+.bottom_wrapper .send_message .text::before {
+    content: "➤";
+    display: block;
+    font-size: 20px;
+    line-height: 1;
+    transform: rotate(-35deg) translate(1px, -1px);
 }
 
-.message_template {
-    display: none;
+.message_template { display: none; }
+
+.chat_window > img {
+    width: 100%;
+    height: auto;
+    min-height: 0;
+    flex: 1 1 auto;
+    object-fit: cover;
 }
 
-/*
-html,body {width:100%;  }
-body,div,ul,li{margin:0; padding:0;}
-ul,li {list-style:none;}
-*/
+.tab { width: 100%; }
 
-/*탭 css 부분 main.css*/
-.tab{float:center; height:20px;}
-.tabnav{font-size:0; width:600px;}
-.tabnav li{display: inline-flex;  height:46px; text-align:center; border-right:1px solid #ddd;}
-.tabnav li a:before{content:""; position:absolute; left:0; top:0px; width:100%; height:3px; }
-.tabnav li a.active:before{background:#3b8c87;}
-.tabnav li a.active{border-bottom:1px solid #fff;}
-.tabnav li a{ position:relative; display:block; background: #ffffff; color: #000; padding:0 45px; line-height:46px; text-decoration:none; font-size:16px;}
+.tabnav {
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.tabnav li { min-width: 0; }
+
+.tabnav li a {
+    height: 46px;
+    display: grid;
+    place-items: center;
+    color: #7d8d88;
+    font-size: 16px;
+    text-decoration: none;
+    transition: color 0.16s ease, background 0.16s ease;
+}
+
 .tabnav li a:hover,
-.tabnav li a.active{background:#3b8c87; color:#ffffff; }
-.tabcontent{padding: 20px; height:244px; border:1px solid #ddd; border-top:none;}
-
-/*기능 선택 버튼 */
-.equipment, .theme, .region {
-    width: 70%;
+.tabnav li a.active,
+.tabnav li a[style*="background"] {
+    background: var(--campster-100) !important;
+    color: var(--campster-800) !important;
 }
 
-.selectBtns {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    background-color: darkseagreen;
-    padding-top: 10px;
-    padding-bottom: 10px;
-    border-radius: 9px;
-}
-.answer img {
-    border-radius: 9px;
+@media (max-width: 520px) {
+    body {
+        display: block;
+        padding: 0;
+        background: var(--campster-50);
+    }
+
+    .chat_window {
+        width: 100%;
+        height: 100svh;
+        min-height: 0;
+        border: 0;
+        border-radius: 0;
+        box-shadow: none;
+    }
+
+    .top_menu {
+        min-height: 72px;
+        padding-top: max(14px, env(safe-area-inset-top));
+    }
+
+    .messages,
+    .homeMain,
+    .communityMain { padding-inline: 14px; }
+
+    .bottom_wrapper { padding-bottom: max(14px, env(safe-area-inset-bottom)); }
 }
 
-.messages{
-    -ms-overflow-style: none;
- }
- .messages::-webkit-scrollbar{
-   display:none;
- }
+@media (max-height: 680px) and (min-width: 521px) {
+    .chat_window {
+        height: calc(100vh - 24px);
+        min-height: 560px;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        scroll-behavior: auto !important;
+        transition-duration: 0.01ms !important;
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+    }
+}
