@@ -1,173 +1,106 @@
-import os
-import sys
-import urllib.request
 import json
-
-from kocrawl.editor.base_editor import BaseEditor
+import os
 import re
-
-from kocrawl.answerer.base_answerer import BaseAnswerer
-
-#EquipmentSearcher?먯꽌 ?ъ슜-------------------------------------------------------------
-
-client_id = ""
-client_secret = ""
+import urllib.error
+import urllib.parse
+import urllib.request
 
 
-#--------------------------------------------------------------------------------------
+NAVER_SHOPPING_URL = "https://openapi.naver.com/v1/search/shop"
+
+
+class EquipmentConfigurationError(RuntimeError):
+    pass
+
+
+class EquipmentServiceError(RuntimeError):
+    pass
 
 
 class EquipmentSearcher:
+    def __init__(self, opener=urllib.request.urlopen, timeout=None):
+        self.opener = opener
+        self.timeout = timeout or float(os.getenv("NAVER_API_TIMEOUT_SECONDS", "5"))
 
-    def __init__(self):
-        self.data_dict = {
-            # ?곗씠?곕? ?댁쓣 ?뺤뀛?덈━ 援ъ“瑜??뺤쓽?⑸땲??
-            'name': [], 'tel': [],
-            'context': [], 'category': [],
-            'address': [], 'thumUrl': []
-        }
+    @staticmethod
+    def _make_query(category: str, brand: str) -> str:
+        return " ".join(part.strip() for part in (category, brand) if part.strip())
 
-    def _make_query(self, category: str, brand: str) -> str:
+    def _make_request(self, query: str):
+        client_id = os.getenv("NAVER_CLIENT_ID")
+        client_secret = os.getenv("NAVER_CLIENT_SECRET")
+        if not client_id or not client_secret:
+            raise EquipmentConfigurationError(
+                "Naver API credentials are not configured"
+            )
+        url = f"{NAVER_SHOPPING_URL}?{urllib.parse.urlencode({'display': 5, 'query': query})}"
+        return urllib.request.Request(
+            url,
+            headers={
+                "X-Naver-Client-Id": client_id,
+                "X-Naver-Client-Secret": client_secret,
+            },
+        )
 
+    def search_naver_shopping(self, category: str, brand: str) -> list:
+        request = self._make_request(self._make_query(category, brand))
+        try:
+            with self.opener(request, timeout=self.timeout) as response:
+                if response.getcode() != 200:
+                    raise EquipmentServiceError(
+                        f"Naver API returned HTTP {response.getcode()}"
+                    )
+                payload = json.loads(response.read().decode("utf-8"))
+        except (urllib.error.URLError, TimeoutError, json.JSONDecodeError) as exc:
+            raise EquipmentServiceError("Naver API request failed") from exc
 
-        query = ' '.join([category, brand])
-        #query = category
-
-        print(query)
-        return query
-
-    def search_naver_shopping(self, location: str, travel: str):
-        query = self._make_query(location, travel)
-
-        encText = urllib.parse.quote(query)
-        url = "https://openapi.naver.com/v1/search/shop?display=5&query=" + encText  # JSON 寃곌낵
-        # url = "https://openapi.naver.com/v1/search/blog.xml?query=" + encText # XML 寃곌낵
-        request = urllib.request.Request(url)
-        request.add_header("X-Naver-Client-Id", client_id)
-        request.add_header("X-Naver-Client-Secret", client_secret)
-        response = urllib.request.urlopen(request)
-        rescode = response.getcode()
-
-        data_dict = [{}]
-        # 由ъ뒪??+ ?뺤뀛?덈━
-
-        if (rescode == 200):
-            response_body = response.read()
-            # print(response_body.decode('utf-8'))
-            json_data = json.loads(response_body.decode('utf-8'))
-            if(len(json_data['items'])!= 0):
-                for i in range(5):
-                    temp_dict = {"title": json_data["items"][i]["title"],
-                                 "link": json_data["items"][i]["link"],
-                                 "image": json_data["items"][i]["image"],
-                                 "lprice": json_data["items"][i]["lprice"],
-                                 "category1": json_data["items"][i]["category1"],
-                                 "category2": json_data["items"][i]["category2"],
-                                 "category3": json_data["items"][i]["category3"],
-                                 "brand": json_data["items"][i]["brand"]
-                             }
-                    data_dict.append(temp_dict)
-            else:
-                data_dict.append({"notfound": "?대떦 ?뺣낫???대떦?섎뒗 臾쇨굔???놁뼱??"})
-            #print(data_dict[1].values())
-            # print(response_body.decode('utf-8'))
-
-        else:
-            print("Error Code:" + rescode)
-
-        return data_dict
+        fields = (
+            "title",
+            "link",
+            "image",
+            "lprice",
+            "category1",
+            "category2",
+            "category3",
+            "brand",
+        )
+        return [
+            {field: item.get(field, "") for field in fields}
+            for item in payload.get("items", [])[:5]
+        ]
 
 
-
-class EquipmentEditor(BaseEditor):
-
-    def edit_map(self, location: str, place: str, result: dict) -> dict:
-        """
-        join_dict瑜??ъ슜?섏뿬 ?뺤뀛?덈━???덈뒗 string 諛곗뿴?ㅼ쓣
-        ?섎굹??string?쇰줈 join?⑸땲??
-        :param location: 吏??
-        :param place: ?μ냼
-        :param result: ?곗씠???뺤뀛?덈━
-        :return: ?섏젙???뺤뀛?덈━
-        """
-
-        for i in range(5):
-
-            result[i] = self.join_dict(result[i], "title")
-            result[i] = self.join_dict(result[i], "link")
-            result[i] = self.join_dict(result[i], "image")
-            result[i] = self.join_dict(result[i], 'lprice')
-
-            #if isinstance(result['context'], str):
-                #result['context'] = re.sub(' ', ', ', result['context'])
-
-        return result
-
-class EquipmentAnswerer():
-
-    def map_form(self, category: str, brand: str, result: list) -> tuple:
-        """
-        ?ы뻾吏 異쒕젰 ?щ㎎
-        :param location: 吏??
-        :param place: ?μ냼
-        :param result: ?곗씠???뺤뀛?덈━
-        :return: 異쒕젰 硫붿떆吏
-        """
-        msg_tuple = ["", "",""]
-        for i in range(3):
-
-            result[i+1]['title'] = re.sub("<b>", "", result[i+1]['title'])
-            result[i + 1]['title'] = re.sub("</b>", "", result[i + 1]['title'])
-
-            msg = f"{result[i + 1]['category1']} - {result[i + 1]['category2']} - {result[i + 1]['category3']} \n"
-            msg += f"\'{category}\' 移댄뀒怨좊━??{i + 1}踰덉㎏ 寃?됯껐怨쇱엯?덈떎.\n"
-            msg += f"\'{result[i + 1]['brand']}\' 釉뚮옖?쒖쓽 \n"
-            msg += f"\'{result[i+1]['title']}\' \n"
-            msg += f"理쒖?媛 : {result[i+1]['lprice']}??\n"
-            msg += f"諛붾줈媛湲?: {result[i+1]['link']}\n"
-            msg += "{{"
-            msg += result[i+1]['image']
-            msg += "}} \n\n"
-            msg_tuple[i] += msg
-
-        return msg_tuple
+class EquipmentAnswerer:
+    @staticmethod
+    def clean_item(item: dict) -> dict:
+        cleaned = dict(item)
+        cleaned["title"] = re.sub(r"</?b>", "", cleaned.get("title", ""))
+        return cleaned
 
 
 class EquipmentCrawler:
+    def __init__(self, searcher=None):
+        self.searcher = searcher or EquipmentSearcher()
 
-    def request(self, category: str, brand: str) -> str:
-        """
-        吏?꾨? ?щ·留곹빀?덈떎.
-        (try-catch濡??먮윭媛 ?섏? ?딅뒗 ?⑥닔)
-        :param category: ?λ퉬??移댄뀒怨좊━
-        :param brand: 釉뚮옖??
-        :return: ?대떦 ?λ퉬
-        """
-
+    def request(self, category: str, brand: str) -> dict:
         try:
             return self.request_debug(category, brand)
-
-        except Exception:
-            return "?대떦 ?λ퉬???????놁뒿?덈떎."
-
-    def request_debug(self, category: str, brand: str) -> tuple:
-        result_dict = EquipmentSearcher().search_naver_shopping(category, brand)
-
-        #result = EquipmentEditor().edit_map(category, brand, result_dict)
-        if 'notfound' in result_dict[1].keys():
+        except EquipmentConfigurationError:
             return {
-                'state':'NOT_FOUND',
-                'answer':result_dict[1]['notfound']
+                "state": "UNAVAILABLE",
+                "answer": "장비 검색 인증 정보가 설정되지 않았습니다.",
             }
+        except EquipmentServiceError:
+            return {"state": "ERROR", "answer": "장비 검색 서비스 연결에 실패했습니다."}
 
-        #return result, result_dict
-        temp_result = {
-            'input': [],
-            'intent': 'equipment',
-            'entity': [],
-            'state': 'SUCCESS',
-            'answer': result_dict[1]
+    def request_debug(self, category: str, brand: str) -> dict:
+        results = self.searcher.search_naver_shopping(category, brand)
+        if not results:
+            return {"state": "NOT_FOUND", "answer": "검색 결과가 없습니다."}
+        return {
+            "input": [],
+            "intent": "equipment",
+            "entity": [],
+            "state": "SUCCESS",
+            "answer": EquipmentAnswerer.clean_item(results[0]),
         }
-
-
-        return temp_result

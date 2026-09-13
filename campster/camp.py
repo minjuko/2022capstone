@@ -1,190 +1,142 @@
-from kocrawl.base import BaseCrawler
-from kocrawl.editor.base_editor import BaseEditor
-from kocrawl.answerer.base_answerer import BaseAnswerer
-from pymongo import MongoClient
-from pymongo.errors import ConnectionFailure
-from pymongo.errors import ServerSelectionTimeoutError
+import os
+import re
 from random import randint
 
-
-class CampCrawler(BaseCrawler):
-
-    def __today_tag(self,tags:str):
-        selected_tags = tags.split(',')
-        result = CampSearcher().find_by_tag(selected_tags)
-        result = CampEditor().edit_today(result)
-
-        return result
+from pymongo import MongoClient
+from pymongo.errors import ConnectionFailure, ServerSelectionTimeoutError
 
 
-    def __today_location(self, location:str):
-        result = CampSearcher().find_by_sigunguNm(location)
-        result = CampEditor().edit_today(result)
-        return CampAnswerer().camp_form(location=location,result=result)
+class CampCrawler:
+    """Dispatch CAMPSTER's region, site-type, and theme searches."""
 
-    def __today_location_place(self, location:str, place:str):
+    def __init__(self, searcher=None):
+        self.searcher = searcher or CampSearcher()
 
-        result = CampSearcher().find_by_sigunguNm_and_lctCl(location=location, lctCl=place)
-        result = CampEditor().edit_today(result)
-        return CampAnswerer().camp_form(location=location,result=result)
+    def _today_tag(self, tags: str):
+        selected_tags = [tag.strip() for tag in tags.split(",") if tag.strip()]
+        if not selected_tags:
+            return []
+        return CampEditor().edit_today(self.searcher.find_by_tag(selected_tags))
 
+    def _today_location(self, location: str):
+        result = CampEditor().edit_today(
+            self.searcher.find_by_sigunguNm(location.strip())
+        )
+        return CampAnswerer().camp_form(location=location, result=result)
 
-    def request(self,location:str, date:str, place:str):
+    def _today_location_place(self, location: str, place: str):
+        result = CampEditor().edit_today(
+            self.searcher.find_by_sigunguNm_and_lctCl(
+                location=location.strip(), lctCl=place.strip()
+            )
+        )
+        return CampAnswerer().camp_form(location=location, result=result)
 
+    def request(self, location: str, date: str, place: str):
         try:
-            return self.request_debug(location,date,place)
-        except Exception:
-            return "해당 내용은 알 수 없습니다."
+            return self.request_debug(location, date, place)
+        except (ConnectionFailure, ServerSelectionTimeoutError):
+            return []
+
+    def request_debug(self, location: str, date: str, place: str):
+        del date  # There is no date-specific CAMPSTER data contract.
+        location = (location or "").strip()
+        place = (place or "").strip()
+        if location and place:
+            return self._today_location_place(location, place)
+        if location:
+            return self._today_location(location)
+        if place:
+            return self._today_tag(place)
+        return []
 
 
-    def request_debug(self, location:str, date:str, place:str):
-
-# location place --> 3
-# location  --> 2
-        params = []
-        select = 0
-        select = select + 2 if len(location) > 0 else select
-        params.append(location) if len(location) > 0 else ''
-        select = select + 1 if len(place) > 0 else select
-        params.append(place) if len(place) > 0 else ''
-        dispatch = [self.__today_tag,self.__today_location,self.__today_location_place]
-        return dispatch[select-1](*params)
-
-
-
-class CampAnswerer(BaseAnswerer):
-
-    def camp_form(self, location:str, result:list):
-        # msg = self.camp_init.format(location=location)
-        #
-        # for i,r in enumerate(result):
-        #     intro = r['lineIntro']
-        #     intro = "" if len(intro)== 0 else ":"+intro
-        #     msg +="☆☆"
-        #     msg += str((i+1))+"."+r['facltNm']+"캠핑장"+intro+"\n"
+class CampAnswerer:
+    def camp_form(self, location: str, result: list):
+        del location
         return result
 
 
+class CampEditor:
+    require_fields = (
+        "facltNm",
+        "lineIntro",
+        "addr1",
+        "addr2",
+        "posblFcltyCl",
+        "animalCmgCl",
+        "tel",
+        "homepage",
+        "firstImageUrl",
+        "lctCl",
+    )
 
-class CampEditor(BaseEditor):
-
-    def __init__(self):
-        self.require_field = ['facltNm','lineIntro','addr1','addr2','posblFcltyCl','animalCmgCl','tel','homepage','firstImageUrl','lctCl']
-
-    def edit_today(self, result:list) -> list:
-
-        ret = []
-        if result == None:
-            return None
-
-        if len(result)>0:
-            for r in result:
-                camp = {}
-                for field in r.keys():
-                    if field in self.require_field:
-                        camp[field] = r[field]
-                ret.append(camp)
-
-            return ret
-
-        else:
-            return None
+    def edit_today(self, result: list) -> list:
+        return [
+            {field: row.get(field, "") for field in self.require_fields}
+            for row in (result or [])
+        ]
 
 
-
-
-class CampSearcher():
+class CampSearcher:
+    def __init__(self, collection=None, mongo_client_factory=MongoClient):
+        self.collection = collection
+        self.mongo_client_factory = mongo_client_factory
 
     def mongodb_conn(self):
-        client = MongoClient("mongodb://localhost:27017/", connectTimeoutMS=5000,
-                             serverSelectionTimeoutMS=5000)
-        db = client.kochat.camp
-        return db
+        if self.collection is not None:
+            return self.collection
+        uri = os.getenv("CAMPSTER_MONGODB_URI", "mongodb://localhost:27017/")
+        timeout_ms = int(os.getenv("CAMPSTER_MONGODB_TIMEOUT_MS", "5000"))
+        client = self.mongo_client_factory(
+            uri, connectTimeoutMS=timeout_ms, serverSelectionTimeoutMS=timeout_ms
+        )
+        return client.kochat.camp
 
-    def find_by_sigunguNm(self,location: str) -> list:
+    @staticmethod
+    def _regex(value: str) -> dict:
+        return {"$regex": re.escape(value)}
 
-        db = self.mongodb_conn()
+    @staticmethod
+    def _sample(result) -> list:
+        rows = list(result)
+        if len(rows) <= 3:
+            return rows
+        start = randint(0, len(rows) - 3)
+        return rows[start : start + 3]
 
-        or_condition_list = []
-        or_condition_list.append({'doNm': {'$regex': location}})
-        or_condition_list.append({'sigunguNm': {"$regex": location}})
-
+    def _find(self, query: dict) -> list:
         try:
-            result = db.find({"$or": or_condition_list})
-            result = list(result)
-            size = len(result)
-            if size > 0:
-                if size > 3:
-                    select = randint(0, len(result) - 4)
-                    result = result[select:select + 3]
-                    return result
-                else:
-                    return result
-            else:
-                return None
+            return self._sample(self.mongodb_conn().find(query))
+        except (ServerSelectionTimeoutError, ConnectionFailure):
+            return []
 
-        except ServerSelectionTimeoutError:
-            print('ServerSelctionTimeoutError')
-        except ConnectionFailure:
-            print('ConnectionFailure Error')
+    def find_by_sigunguNm(self, location: str) -> list:
+        pattern = self._regex(location)
+        return self._find({"$or": [{"doNm": pattern}, {"sigunguNm": pattern}]})
 
-    def find_by_sigunguNm_and_lctCl(self,location: str, lctCl: str) -> list:
-
-        db = self.mongodb_conn()
-        search_condition_list = []
-
-        or_condition_list = []
-        or_condition_list.append({'doNm': {'$regex': location}})
-        or_condition_list.append({'sigunguNm': {"$regex": location}})
-        or_result = {'$or': or_condition_list}
-
-        search_condition_list.append(or_result)
-        search_condition_list.append({'lctCl': {"$regex": lctCl}})
-
-        try:
-            result = db.find({'$and': search_condition_list})
-            result = list(result)
-            size = len(result)
-            if size > 0:
-                if size > 3:
-                    select = randint(0, len(result) - 4)
-                    result = result[select:select + 3]
-                    return result
-                else:
-                    return result
-
-        except ServerSelectionTimeoutError:
-            print('ServerSelctionTimeoutError')
-        except ConnectionFailure:
-            print('ConnectionFailure Error')
-
+    def find_by_sigunguNm_and_lctCl(self, location: str, lctCl: str) -> list:
+        pattern = self._regex(location)
+        return self._find(
+            {
+                "$and": [
+                    {"$or": [{"doNm": pattern}, {"sigunguNm": pattern}]},
+                    {"lctCl": self._regex(lctCl)},
+                ]
+            }
+        )
 
     def make_tag_query(self, place: str) -> dict:
-        return {'$or': [{'themaEnvrnCl': {'$regex': place}},
-                        {'lineIntro': {'$regex': place}}, {'intro': {'$regex': place}},
-                        {'featureNm': {'$regex': place}}]}
+        pattern = self._regex(place)
+        return {
+            "$or": [
+                {"themaEnvrnCl": pattern},
+                {"lineIntro": pattern},
+                {"intro": pattern},
+                {"featureNm": pattern},
+            ]
+        }
 
-    def find_by_tag(self,tags):
-
-        db = self.mongodb_conn()
-        tag_query_list = []
-        for tag in tags:
-            tag_query_list.append(self.make_tag_query(tag))
-
-
-        try:
-            res = db.find({'$and': tag_query_list})
-            res = list(res)
-            size = len(res)
-            if size > 0:
-                if size > 3:
-                    select = randint(0, len(res) - 4)
-                    res = res[select:select + 3]
-                    return res
-                else:
-                    return res
-
-        except ServerSelectionTimeoutError:
-            print('ServerSelctionTimeoutError')
-        except ConnectionFailure:
-            print('ConnectionFailure Error')
+    def find_by_tag(self, tags) -> list:
+        queries = [self.make_tag_query(tag) for tag in tags if tag]
+        return self._find({"$and": queries}) if queries else []

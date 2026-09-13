@@ -5,6 +5,23 @@ let selectedBUTTON = 0;
 let btnNums = 0;
 let specific_data = [];
 // functions
+function setSafeExternalUrl(element, attribute, value) {
+    try {
+        const url = new URL(value, window.location.origin);
+        if (url.protocol === 'http:' || url.protocol === 'https:') {
+            element.setAttribute(attribute, url.href);
+        }
+    } catch (error) {
+        console.warn('유효하지 않은 URL을 차단했습니다.');
+    }
+}
+
+function escapeHtml(value) {
+    const holder = document.createElement('div');
+    holder.textContent = String(value);
+    return holder.innerHTML;
+}
+
 function Message(arg) {
     this.text = arg.text;
     this.message_side = arg.message_side;
@@ -66,7 +83,7 @@ function seperateURL(textUrlMsg) {  // 서버에서 문자열 받아서 채팅�
     sendMessage("<img width=80% height=80% src='"+urlMsg+"'> <br>" + textMsg  , 'left');
 }
 
-function FinSelectTheme(){
+function legacyFinSelectTheme(){
 
     let themestr = new String("");
     let isFirst = true;
@@ -192,6 +209,7 @@ function FinSelectTheme(){
         }
     }
 
+    themeIndex = themestr ? themestr.split(',').length : 0;
     if(themeIndex>3){
         alert("3개까지 선택 가능");
     }
@@ -337,6 +355,7 @@ function FinSelectTheme(){
         }
     }
 
+    themeIndex = themestr ? themestr.split(',').length : 0;
     if(themeIndex>3){
         alert("3개까지 선택 가능");
     }
@@ -514,7 +533,7 @@ function setUserName(username) {
     let selectNUM;
     if (username != null && username.replace(" ", "" !== "")) {
         setTimeout(function () {
-            return sendMessage("반가워요 " + username + "님! <br> 아래 세 가지 기능 중 원하시는 기능을 선택해주세요 <i class='fa-regular fa-face-smile'></i>", 'left');
+            return sendMessage("반가워요 " + escapeHtml(username) + "님! <br> 아래 세 가지 기능 중 원하시는 기능을 선택해주세요 <i class='fa-regular fa-face-smile'></i>", 'left');
         }, 1000);
         setTimeout(function () {
             return sendMessage("<div class='selectBtns'><button class='region' onclick='selectNUM1();'>1. 지역 기반 캠핑지 추천</button><br><button class='theme' onclick='selectNUM2();'>2. 테마 기반 캠핑지 추천</button><br><button class='equipment' onclick='selectNUM3();'>3. 캠핑 장비 추천</button></div>", 'left');
@@ -535,7 +554,7 @@ function setUserName(username) {
 
 function requestChat(messageText, url_pattern) {
     $.ajax({
-        url: "http://127.0.0.1:8080/" + url_pattern + '/' + userName + '/' + messageText,
+        url: "/" + url_pattern + '/' + encodeURIComponent(userName) + '/' + encodeURIComponent(messageText),
         type: "GET",
         dataType: "json",
         success: function (data) {
@@ -563,7 +582,7 @@ function requestChat(messageText, url_pattern) {
 function tagRequest(messageText , url_pattern) {
 
     $.ajax({
-        url: "http://127.0.0.1:8080/" + url_pattern + '/' + userName + '/' + messageText,
+        url: "/" + url_pattern + '/' + encodeURIComponent(userName) + '/' + encodeURIComponent(messageText),
         type: "GET",
         dataType: "json",
         success: function (data) {
@@ -593,7 +612,7 @@ function FinEq(text){    // obj 문자열로 바꾸고
     let choice = text[0];
 
     $.ajax({
-        url: "http://127.0.0.1:8080/selection1/"+ userName + '/' + choice,
+        url: "/selection1/" + encodeURIComponent(userName) + '/' + encodeURIComponent(choice),
         type: "GET",
         dataType: "json",
         success: function (data) {
@@ -642,6 +661,9 @@ function EquipAnswer(data, message_side) {
 function tagAnswer(jsonArray, message_side){
 
      // jsonArray에는 3가지의 캠핑장 정보를 담고 있음.
+     if (!Array.isArray(jsonArray) || jsonArray.length === 0) {
+         return sendMessage('검색 결과가 없습니다.', 'left');
+     }
      specific_data[btnNums] = jsonArray[0];
      let $messages, message;
      $('.message_input').val('');
@@ -662,6 +684,9 @@ function tagAnswer(jsonArray, message_side){
 // 지역 기반 검색 정보 메시지 호출
 function sendAnswer(jsonArray, message_side) {
     // jsonArray에는 3가지의 캠핑장 정보를 담고 있음.
+    if (!Array.isArray(jsonArray) || jsonArray.length === 0) {
+        return sendMessage('검색 결과가 없습니다.', 'left');
+    }
     specific_data[btnNums] = jsonArray[0];
     let $messages, message;
     $('.message_input').val('');
@@ -709,7 +734,7 @@ function sendSpecificAnswer(data, message_side, idx) {
 
 // 장비 정보 메시지
 function equipResultMessage(arg){
-    data = arg.text;
+    let data = arg.text;
     let title = '⚒️'+data.title+'⚒️';
     let image = data.image;
     let link = data.link;
@@ -721,22 +746,23 @@ function equipResultMessage(arg){
     answer_div.classList.add('answer');
     // make title
     let p_name = document.createElement('p');
-    p_name.innerHTML = title;
+    p_name.textContent = title;
     // make image 150*150
     let img =  document.createElement('img');
-    img.src = image;
+    setSafeExternalUrl(img, 'src', image);
     img.width = 150;
     img.height = 150;
     let link_container = document.createElement('p');
     let a_link = document.createElement('a');
-    a_link.href = link;
-    a_link.innerHTML = '해당 정보로 바로가기';
+    setSafeExternalUrl(a_link, 'href', link);
+    a_link.rel = 'noopener noreferrer';
+    a_link.textContent = '해당 정보로 바로가기';
     link_container.append(a_link);
 
     let p_lprice = document.createElement('p');
-    p_lprice.innerHTML = '가격 : '+ lprice;
+    p_lprice.textContent = '가격 : '+ lprice;
     let p_brand = document.createElement('p');
-    p_brand.innerHTML = '브랜드 : '+ brand;
+    p_brand.textContent = '브랜드 : '+ brand;
 
     answer_div.append(p_name);
     answer_div.append(img);
@@ -780,7 +806,7 @@ function sendResultMessage(arg) {
     // arg.text = {"facltNm":... , "lineIntro":... , ... }
 
     setTimeout(function() {sendMessage('상세보기를 원하시면 버튼을 눌러주세요.', 'left')}, 500);
-    data = arg.text;
+    let data = arg.text;
     let imgUrl = data.firstImageUrl.length > 0 ? data.firstImageUrl : './alt_image.jpg';
     let facltNm = '🏕️'+data.facltNm+'🏕️';
     // make div.answer
@@ -788,10 +814,10 @@ function sendResultMessage(arg) {
     answer_div.classList.add('answer');
     // make title
     let p_name = document.createElement('p');
-    p_name.innerHTML = facltNm;
+    p_name.textContent = facltNm;
     // make image 150*150
     let img =  document.createElement('img');
-    img.src = imgUrl;
+    setSafeExternalUrl(img, 'src', imgUrl);
     img.width = 150;
     img.height = 150;
     // make button
@@ -867,18 +893,19 @@ function sendSpecificMessage(arg){
 
     let ul = document.createElement('ul');
 
-    for(specific in specific_object){
+    for(let specific in specific_object){
        let li =  document.createElement('li');
        if(specific != '홈페이지'){
        let text = specific+" : "+ specific_object[specific];
-       li.innerHTML = text;
+       li.textContent = text;
        }
        else {
         li.append('홈페이지 : ');
         let a = document.createElement('a');
         if(homepage != replaceEmptyData)
-            a.href = homepage;
-        a.innerHTML = specific_object[specific];
+            setSafeExternalUrl(a, 'href', homepage);
+        a.rel = 'noopener noreferrer';
+        a.textContent = specific_object[specific];
         li.append(a);
        }
        ul.appendChild(li);
@@ -930,10 +957,9 @@ function sendSpecificMessage(arg){
 
 
 function replyMessage () {
-    themeIndex = 0;
     NUM = 0;
     let chk_btn  = document.querySelectorAll('[name=chk]');
-    for(chk of chk_btn){
+    for(let chk of chk_btn){
         //chk.sele
     }
     setTimeout(function () {sendMessage('가져온 정보는 마음에 들었나요?','left')}, 500);
@@ -948,7 +974,7 @@ function replyMessage () {
 
 function onSendButtonClicked() {    // 전송 버튼을 누르면
     let messageText = getMessageText();
-    sendMessage(messageText, 'right');
+    sendMessage(escapeHtml(messageText), 'right');
 
     if (userName == null) {
         userName = setUserName(messageText);
