@@ -22,3 +22,5 @@ def test_camp_scenario_is_registered_and_place_is_optional():
     assert "camp" in {item.id for item in scenarios.elts if isinstance(item, ast.Name)}
     assert '"PLACE": [" "]' in scenario
     assert "api=CampCrawler().request_debug" in scenario
+    assert 'os.getenv("CAMPSTER_HOST", "127.0.0.1")' in application
+    assert 'os.getenv("CAMPSTER_PORT", "8080")' in application

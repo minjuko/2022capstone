@@ -1,3 +1,5 @@
+import os
+
 from kochat.app import KochatApi
 from kochat.data import Dataset
 from kochat.loss import CRFLoss, CosFace, CenterLoss, COCOLoss, CrossEntropyLoss
@@ -49,4 +51,7 @@ register_campster_routes(kochat.app)
 if __name__ == "__main__":
     kochat.app.template_folder = kochat.root_dir + "templates"
     kochat.app.static_folder = kochat.root_dir + "static"
-    kochat.app.run(port=8080, host="127.0.0.1")
+    kochat.app.run(
+        port=int(os.getenv("CAMPSTER_PORT", "8080")),
+        host=os.getenv("CAMPSTER_HOST", "127.0.0.1"),
+    )
