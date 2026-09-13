@@ -1,5 +1,7 @@
 # 캠핑 추천 챗봇 서비스 CAMPSTER
 
+[![CI](https://github.com/minjuko/2022capstone/actions/workflows/ci.yml/badge.svg)](https://github.com/minjuko/2022capstone/actions/workflows/ci.yml)
+
 > 자연어 대화를 통해 사용자의 지역과 취향을 파악하고, 캠핑장과 캠핑 장비 탐색을 지원하는 KoChat 기반 모바일 챗봇 서비스
 
 `CAMPSTER`는 2022년 전남대학교 소프트웨어공학과 **산학협력캡스톤**에서 진행한 6인 팀 프로젝트입니다.
@@ -15,7 +17,7 @@
 | 항목 | 내용 |
 | --- | --- |
 | 프로젝트 | CAMPSTER · 캠핑 추천 챗봇 |
-| 기간 | 2022년 |
+| 기간 | 2022.09.14 – 2022.12.02 |
 | 형태 | 전남대학교 소프트웨어공학과 산학협력캡스톤 |
 | 인원 | 6명 |
 | 담당 | Frontend 공동 구현 및 KoChat 연동 |
@@ -29,7 +31,7 @@
 
 ## 서비스 화면
 
-2022년 프로젝트의 주요 기능과 대화 Flow를 유지하고, 포트폴리오 정리 과정에서 **Presentation 영역의 UI를 개선한 화면**입니다.
+2022년 프로젝트의 주요 기능과 대화 흐름을 유지하면서 레이아웃, 채팅 말풍선, 선택 UI와 결과 카드를 개선한 화면입니다.
 
 <table>
   <tr>
@@ -168,6 +170,45 @@ Frontend 담당 팀원 3명이 화면과 서비스 Flow를 함께 논의하며 �
 
 <br>
 
+## 개선 작업
+
+프로젝트 이후 기존 기능과 API 계약을 유지하면서 실행 안정성, 보안과 검증 환경을 개선했습니다.
+
+- CAMPSTER 시나리오 등록과 지역·입지·테마 탐색 분기 정리
+- MongoDB URI·연결 제한 시간과 Naver API 인증 정보 환경변수화
+- 외부 인증 정보가 없을 때 실제 API 요청 차단
+- MongoDB 검색어 이스케이프 및 검색 결과·연결 실패 처리
+- Naver API 빈 결과·오류·시간 초과 처리
+- 동일 출처 기반 API 요청과 URL 경로 인코딩 적용
+- 사용자 입력과 외부 응답의 안전한 DOM 출력
+- 외부 링크·이미지 URL 검증 및 링크 보안 속성 적용
+- 중복 Frontend 함수와 선택 개수 계산 오류 정리
+
+> 개선 작업에서는 CAMPSTER 적용 코드를 대상으로 했으며, KoChat의 NLP 모델과 원본 프레임워크 코드는 변경하지 않았습니다.
+
+<br>
+
+## 검증
+
+외부 인증 정보, MongoDB 서버와 KoChat 모델 없이 핵심 분기와 API 계약을 검증합니다.
+
+| 검증 | 결과 |
+| --- | --- |
+| GitHub Actions CI | Passed |
+| Test Files | 6 passed |
+| Tests | 27 passed |
+| Failed / Skipped | 0 / 0 |
+| Ruff Lint / Format | Passed |
+| Python Compile | Passed |
+| JavaScript Syntax | Passed |
+| 검증 환경 | Python 3.11 · Node.js 20 |
+
+CI는 `requirements-ci.txt`의 분리된 의존성을 사용하여 캠핑장 검색, Naver 요청, Flask API 계약과 안전한 화면 출력 로직을 회귀 검증합니다.
+
+이는 전체 KoChat 애플리케이션의 Python 3.11 호환이나 NLP 모델 실행을 의미하지 않습니다. 실제 서비스 실행에는 기존 KoChat 의존성 환경, 학습된 모델, MongoDB 데이터와 기능에 따른 Naver API 인증 정보가 필요합니다.
+
+<br>
+
 ## 기술 스택
 
 | 구분 | 기술 |
@@ -179,6 +220,8 @@ Frontend 담당 팀원 3명이 화면과 서비스 Flow를 함께 논의하며 �
 | Data | GoCamping 기반 캠핑장 데이터 |
 | External API | Naver Shopping Search API |
 | Infrastructure | NHN Cloud |
+| Testing | Pytest, Ruff |
+| CI | GitHub Actions |
 | Collaboration | GitHub, Slack, Zoom, Google Docs · Sheets, Notion |
 
 NHN Cloud 서버 및 GPU 환경은 학교의 개발환경 지원사업을 통해 프로젝트 개발환경으로 활용했습니다.
@@ -189,8 +232,10 @@ NHN Cloud 서버 및 GPU 환경은 학교의 개발환경 지원사업을 통해
 
 ```text
 .
+├── .github/workflows/      # GitHub Actions CI
 ├── campster/               # CAMPSTER Application
 │   ├── application.py
+│   ├── web.py              # 검증 가능한 Flask Application Factory
 │   ├── camp.py             # 캠핑장 조건 검색
 │   ├── equipment.py        # 캠핑 장비 상품 탐색
 │   ├── scenario.py         # CAMPSTER Scenario
@@ -198,8 +243,10 @@ NHN Cloud 서버 및 GPU 환경은 학교의 개발환경 지원사업을 통해
 │   └── templates/          # Frontend Templates
 │
 ├── kochat/                 # KoChat Open Source Framework
+├── tests/                  # 외부 서비스 없는 회귀 테스트
 ├── docs/                   # KoChat 관련 문서
-├── requirements.txt
+├── requirements-ci.txt     # CI 검증용 최소 의존성
+├── requirements.txt        # 기존 KoChat 의존성
 ├── setup.py
 └── LICENSE
 ```
@@ -214,7 +261,7 @@ KoChat 관련 Source와 License는 기존 **Apache License 2.0** 및 저작권 �
 
 CAMPSTER를 통해 오픈소스 챗봇 Framework의 구조를 분석하고, **자연어 처리 결과와 대화 상태를 실제 Frontend Interaction으로 연결하는 과정**을 경험했습니다.
 
-현재 서비스는 운영하지 않습니다. 2022년 프로젝트의 기능 및 대화 로직은 기존 구현을 보존했으며, 포트폴리오 정리 과정에서는 레이아웃, 채팅 Bubble, 선택 UI, 결과 Card 등 **Presentation 영역의 화면 스타일만 개선**했습니다.
+현재 서비스는 운영하지 않습니다. 2022년 프로젝트의 기능과 대화 로직은 보존하고, 이후 화면 구성과 서비스 연동 안정성, 입력·출력 보안, 회귀 테스트와 CI를 개선했습니다.
 
 <br>
 
