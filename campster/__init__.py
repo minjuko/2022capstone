@@ -1,0 +1,1 @@
+"""CAMPSTER application package."""
