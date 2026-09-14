@@ -1,6 +1,6 @@
 # 캠핑 추천 챗봇 서비스 CAMPSTER
 
-[![CI](https://github.com/minjuko/2022capstone/actions/workflows/ci.yml/badge.svg)](https://github.com/minjuko/2022capstone/actions/workflows/ci.yml)
+[![CI](https://github.com/minjuko/campster/actions/workflows/ci.yml/badge.svg)](https://github.com/minjuko/campster/actions/workflows/ci.yml)
 
 > 자연어 대화를 통해 사용자의 지역과 취향을 파악하고, 캠핑장과 캠핑 장비 탐색을 지원하는 KoChat 기반 모바일 챗봇 서비스
 
