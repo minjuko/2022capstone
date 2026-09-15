@@ -35,16 +35,20 @@
 
 <table>
   <tr>
-    <th>대화 시작</th>
-    <th>지역 기반 캠핑장 탐색</th>
+    <th width="50%">대화 시작</th>
+    <th width="50%">지역 기반 캠핑장 탐색</th>
+  </tr>
+  <tr>
+    <td align="center"><img src="./docs/images/readme/01-username.png" alt="CAMPSTER 대화 시작 화면" width="300"></td>
+    <td align="center"><img src="./docs/images/readme/02-지역기반2.png" alt="지역 기반 캠핑장 탐색 화면" width="300"></td>
+  </tr>
+  <tr>
     <th>취향 기반 캠핑장 탐색</th>
     <th>캠핑 장비 탐색</th>
   </tr>
   <tr>
-    <td><img src="./docs/images/readme/01-username.png" alt="CAMPSTER 대화 시작 화면"></td>
-    <td><img src="./docs/images/readme/02-지역기반2.png" alt="지역 기반 캠핑장 탐색 화면"></td>
-    <td><img src="./docs/images/readme/03-취향기반2.png" alt="취향 기반 캠핑장 탐색 화면"></td>
-    <td><img src="./docs/images/readme/04-장비추천.png" alt="캠핑 장비 탐색 화면"></td>
+    <td align="center"><img src="./docs/images/readme/03-취향기반2.png" alt="취향 기반 캠핑장 탐색 화면" width="300"></td>
+    <td align="center"><img src="./docs/images/readme/04-장비추천.png" alt="캠핑 장비 탐색 화면" width="300"></td>
   </tr>
 </table>
 
